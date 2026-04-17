@@ -1,164 +1,142 @@
-# 🪢 Jogo da Forca — Flutter
+# 🪢 Em Forca (Mobile - Flutter)
 
-> Projeto acadêmico migrado de Java/MySQL para Flutter/SQLite.  
-> Um jogo da forca mobile completo, com múltiplas categorias e modo 2 jogadores.
-
----
-
-## 📱 Sobre o Projeto
-
-Este app foi desenvolvido como projeto da faculdade de **Ciência da Computação**.  
-A versão original foi criada em **Java com Swing** e banco de dados **MySQL**.  
-Esta versão foi **migrada e expandida** para **Flutter**, tornando o jogo:
-
-- ✅ Independente de servidor (sem precisar de MySQL instalado)
-- ✅ Funcional em qualquer celular Android/iOS
-- ✅ Com banco de dados SQLite embutido no app
-- ✅ Portável para GitHub como portfólio
+Projeto desenvolvido na faculdade de Ciência da Computação.
+A ideia foi pegar um jogo que já tínhamos feito em Java e transformar em uma versão mobile usando Flutter.
 
 ---
 
-## 🎮 Como Jogar
+## 📱 Sobre o projeto
 
-1. Escolha **1 Jogador** ou **2 Jogadores**
-2. Selecione uma **categoria**
-3. Adivinhe a palavra clicando nas letras
-4. Você tem **7 tentativas** antes do game over
-5. Use os botões de **Dica** e **Categoria** (cada um custa 1 vida)
+Esse jogo começou como uma aplicação em Java com interface Swing e banco MySQL.
+Depois resolvi refazer tudo em Flutter pra rodar direto no celular e não depender de servidor.
 
----
+Nessa versão:
 
-## 🗂️ Categorias Disponíveis
-
-| Emoji | Categoria |
-|-------|-----------|
-| 🎬 | Filmes e Séries |
-| ⚽ | Esportes |
-| 💻 | Tecnologia / Programação |
-| 🍕 | Comidas e Bebidas |
-| 🎵 | Música |
+* O jogo funciona totalmente offline
+* O banco agora é SQLite (local no app)
+* Interface adaptada pra mobile
+* Código mais organizado comparado à versão antiga
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## 🎮 Como funciona
 
-| Tecnologia | Função |
-|------------|--------|
-| **Flutter** | Framework mobile (Android/iOS) |
-| **Dart** | Linguagem de programação |
-| **SQLite** (sqflite) | Banco de dados local no celular |
-| **Google Fonts** | Tipografia (Nunito) |
-| **flutter_animate** | Animações suaves |
+* Dá pra jogar sozinho ou em 2 jogadores
+* Você escolhe uma categoria
+* Vai tentando adivinhar a palavra letra por letra
+* Tem um limite de 7 erros
 
----
+Também tem duas ajudas:
 
-## 📁 Estrutura do Projeto
+* Dica da palavra
+* Mostrar a categoria
 
-```
-lib/
-├── main.dart                    # Ponto de entrada (equivalente ao main() do Java)
-├── theme/
-│   └── app_tema.dart            # Cores e estilos centralizados
-├── models/
-│   └── palavra.dart             # Modelo de dados (equivalente ao Palavra.java)
-├── database/
-│   └── database_helper.dart     # Banco SQLite (substitui ConexaoFactory + JogoDAO)
-├── widgets/
-│   └── boneco_forca.dart        # Desenho do boneco (equivalente ao desenharCenario())
-└── screens/
-    ├── tela_inicial.dart        # Menu principal
-    ├── tela_categorias.dart     # Seleção de categoria
-    ├── tela_jogo.dart           # Tela do jogo (equivalente ao JogoTela.java)
-    └── tela_pontuacao.dart      # Placar dos jogadores
-```
+Mas usar isso custa vida, então tem que pensar bem.
 
 ---
 
-## 🔄 Comparação: Java → Flutter
+## 🗂️ Categorias
 
-| Java (Original) | Flutter (Novo) |
-|-----------------|----------------|
-| `Palavra.java` | `models/palavra.dart` |
-| `ConexaoFactory.java` | `database/database_helper.dart` |
-| `JogoDAO.java` | `database/database_helper.dart` |
-| `JogoTela.java` | `screens/tela_jogo.dart` |
-| `Graphics2D` / `paintComponent()` | `CustomPainter` / `BonecoForca` |
-| `MySQL` (servidor externo) | `SQLite` (embutido no app) |
-| `JOptionPane.showMessageDialog()` | `showDialog()` |
-| `JButton` customizado | `GestureDetector` + `AnimatedContainer` |
+* Filmes e Séries
+* Esportes
+* Tecnologia
+* Comidas e Bebidas
+* Música
 
 ---
 
-## ➕ Como Adicionar Palavras
+## 🛠️ Tecnologias
 
-Abra o arquivo `lib/database/database_helper.dart` e localize o método `_popularBancoDados()`.
+* Flutter
+* Dart
+* SQLite (sqflite)
+* Google Fonts
+* flutter_animate
 
-Adicione novas palavras seguindo o padrão:
+---
+
+## 📁 Organização do projeto
+
+A estrutura ficou mais ou menos assim:
+
+* `main.dart` → inicialização do app
+* `models/` → estrutura das palavras
+* `database/` → controle do banco SQLite
+* `screens/` → telas do app
+* `widgets/` → componentes reutilizáveis (tipo o boneco da forca)
+* `theme/` → cores e estilos
+
+---
+
+## 🔄 Comparação com a versão antiga
+
+Na versão antiga (Java):
+
+* Usava MySQL
+* Interface com Swing
+* Código mais acoplado
+
+Agora no Flutter:
+
+* Banco local (SQLite)
+* Interface mais moderna
+* Melhor separação de responsabilidades
+
+---
+
+## ➕ Adicionar palavras
+
+As palavras ficam dentro do arquivo:
+
+`lib/database/database_helper.dart`
+
+No método de inserção inicial.
+
+Formato:
 
 ```dart
-{'texto': 'SUAPALAVRA', 'dica': 'Dica sobre a palavra', 'categoria': 'Categoria', 'dificuldade': 'medio'},
+{'texto': 'PALAVRA', 'dica': 'Alguma dica', 'categoria': 'Categoria', 'dificuldade': 'medio'},
 ```
 
-**Dificuldades:**
-- `'facil'` → até 5 letras
-- `'medio'` → 6 a 8 letras  
-- `'dificil'` → 9 letras ou mais
-
-**Categorias disponíveis:**
-- `'Filmes e Séries'`
-- `'Esportes'`
-- `'Tecnologia'`
-- `'Comidas e Bebidas'`
-- `'Música'`
-
-> ⚠️ **Atenção:** Após adicionar palavras, desinstale o app do celular/emulador e instale novamente. O banco de dados só é criado na primeira instalação.
+Depois de adicionar, precisa reinstalar o app pra recriar o banco.
 
 ---
 
-## 🚀 Como Rodar o Projeto
-
-### Pré-requisitos
-- [Flutter SDK](https://flutter.dev/docs/get-started/install) instalado
-- Android Studio ou VS Code com extensão Flutter
-- Emulador Android ou celular físico
-
-### Passos
+## 🚀 Rodando o projeto
 
 ```bash
-# 1. Clone o repositório
 git clone https://github.com/SEU_USUARIO/jogo-forca-flutter.git
-
-# 2. Entre na pasta
 cd jogo-forca-flutter
-
-# 3. Instale as dependências
 flutter pub get
-
-# 4. Rode o app
 flutter run
 ```
 
 ---
 
-## 📸 Funcionalidades
+## 📸 O que o jogo tem
 
-- 🎯 Palavra aleatória por categoria
-- ❤️ Sistema de vidas (7 tentativas)
-- 💡 Dicas reveladas com custo de vida
-- 🏷️ Categoria revelada com custo de vida
-- 👥 Modo 2 jogadores (vez a vez)
-- 🏆 Placar salvo no banco SQLite
-- 🎨 Interface inspirada no Duolingo
-- 📱 Responsivo para qualquer tamanho de tela
+* Sistema de vidas
+* Dicas com custo
+* Categorias
+* Modo 2 jogadores
+* Placar salvo
+* Interface adaptada pra celular
 
 ---
 
-## 👨‍💻 Autor
+## 👨‍💻 Autores
 
-Desenvolvido como projeto acadêmico — Ciência da Computação.
+Projeto desenvolvido por:
+
+* Carlos Joab
+* Augusto
+* Arthur
+* Michael
+
+Como parte das atividades da faculdade de Ciência da Computação.
 
 ---
 
 ## 📄 Licença
 
-Este projeto é de uso educacional e livre para estudo.
+Uso livre para estudo.
