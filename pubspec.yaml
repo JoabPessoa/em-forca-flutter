@@ -1,0 +1,28 @@
+name: jogo_forca
+description: Jogo da Forca - App Mobile com Flutter
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  sqflite: ^2.3.0          # Banco de dados SQLite local
+  path: ^1.8.3              # Para localizar o banco no dispositivo
+  google_fonts: ^6.1.0      # Fontes bonitas
+  flutter_animate: ^4.3.0   # Animações suaves
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/logo.png
+    - assets/um_jogador.png
+    - assets/dois_jogadores.png
+    - assets/trofeu.png
