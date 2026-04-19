@@ -131,7 +131,7 @@ Projeto desenvolvido por:
 * Carlos Joab
 * Augusto
 * Arthur Vinícius
-* Michael
+* Michael Domingos
 
 Como parte das atividades da faculdade de Ciência da Computação.
 
