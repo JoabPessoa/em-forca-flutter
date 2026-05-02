@@ -1,224 +1,202 @@
-// ============================================================
-// TELA INICIAL — Atualizada
-// - Nome do app: "Em Forca"
-// - Logo: imagem personalizada (assets/logo.png)
-// - Ícones dos botões: imagens personalizadas
-// ============================================================
-
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import 'package:jogo_forca/screens/tela_categorias.dart';
+import 'package:jogo_forca/screens/tela_pontuacao.dart';
+import '../audio_manager.dart';
 import '../theme/app_tema.dart';
-import 'tela_categorias.dart';
-import 'tela_pontuacao.dart';
 
-class TelaInicial extends StatelessWidget {
+class TelaInicial extends StatefulWidget {
   const TelaInicial({super.key});
 
   @override
+  State<TelaInicial> createState() => _TelaInicialState();
+}
+
+class _TelaInicialState extends State<TelaInicial> {
+
+  @override
+  void initState() {
+    super.initState();
+    // Inicia a música do menu assim que o app abre
+    AudioManager.instance.playMusica('musica_menu.mp3');
+  }
+
+  void _abrirConfiguracoesAudio() {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return StatefulBuilder(
+            builder: (context, setStateDialog) {
+              return Dialog(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 320,
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/bg_dialog.png'),
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                      padding: const EdgeInsets.fromLTRB(30, 45, 30, 30),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text('Som', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: AppTema.texto)),
+                          const SizedBox(height: 24),
+
+                          // Slider de Música
+                          const Text('Música', style: TextStyle(fontWeight: FontWeight.w700)),
+                          Slider(
+                            value: AudioManager.instance.volumeMusica,
+                            activeColor: AppTema.azul,
+                            onChanged: (val) {
+                              setStateDialog(() => AudioManager.instance.setVolumeMusica(val));
+                            },
+                          ),
+
+                          const SizedBox(height: 16),
+
+                          // Slider de Efeitos
+                          const Text('Efeitos', style: TextStyle(fontWeight: FontWeight.w700)),
+                          Slider(
+                            value: AudioManager.instance.volumeEfeitos,
+                            activeColor: AppTema.verde,
+                            onChanged: (val) {
+                              setStateDialog(() => AudioManager.instance.setVolumeEfeitos(val));
+                            },
+                            onChangeEnd: (val) => AudioManager.instance.playClique(),
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // BOTÃO DE FITA
+                    GestureDetector(
+                      onTap: () {
+                        AudioManager.instance.playClique();
+                        Navigator.pop(context);
+                      },
+                      child: Image.asset('assets/images/sair_btn.png', width: 120),
+                    ),
+                  ],
+                ),
+              );
+            }
+        );
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final larguraTela = MediaQuery.of(context).size.width;
+
     return Scaffold(
-      backgroundColor: AppTema.fundo,
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset('assets/images/bg_quadro_branco.jpg', fit: BoxFit.cover),
+
+          SafeArea(
+            child: Stack(
               children: [
-                // --- Logo personalizada ---
-                Image.asset(
-                  'assets/logo.png',
-                  height: 140,
-                  fit: BoxFit.contain,
-                )
-                    .animate()
-                    .scale(duration: 600.ms, curve: Curves.elasticOut),
+                // Envolvemos a Column em um SizedBox com a largura total da tela para forçar a centralização
+                SizedBox(
+                  width: larguraTela,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // CABEÇALHO
+                      Column(
+                        children: [
+                          Image.asset('assets/images/logo_icone.png', width: larguraTela * 0.3),
+                          const SizedBox(height: 16),
+                          Image.asset('assets/images/logo_em_forca.png', width: larguraTela * 0.8),
+                          const SizedBox(height: 10),
+                        ],
+                      ),
 
-                const SizedBox(height: 20),
+                      // BOTÕES CENTRAIS
+                      Column(
+                        children: [
+                          _BotaoCustomizado(
+                            imagem: 'assets/images/btn_1_jogador.png',
+                            largura: larguraTela * 0.85,
+                            aoPressionar: () {
+                              AudioManager.instance.playClique();
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const TelaCategorias(modoMultiplayer: false)));
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          _BotaoCustomizado(
+                            imagem: 'assets/images/btn_2_jogadores.png',
+                            largura: larguraTela * 0.85,
+                            aoPressionar: () {
+                              AudioManager.instance.playClique();
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const TelaCategorias(modoMultiplayer: true)));
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          _BotaoCustomizado(
+                            imagem: 'assets/images/btn_placar.png',
+                            largura: larguraTela * 0.85,
+                            aoPressionar: () {
+                              AudioManager.instance.playClique();
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const TelaPontuacao()));
+                            },
+                          ),
+                        ],
+                      ),
 
-                Text(
-                  'EM FORCA',
-                  style: TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.w900,
-                    color: AppTema.texto,
-                    letterSpacing: 3,
-                  ),
-                )
-                    .animate()
-                    .fadeIn(delay: 200.ms)
-                    .slideY(begin: 0.3, end: 0),
-
-                const SizedBox(height: 8),
-
-                Text(
-                  'Adivinhe a palavra letra por letra!',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: AppTema.neutroEsc,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ).animate().fadeIn(delay: 350.ms),
-
-                const SizedBox(height: 48),
-
-                _BotaoMenu(
-                  imagemAsset: 'assets/um_jogador.png',
-                  titulo: '1 Jogador',
-                  subtitulo: 'Jogue sozinho',
-                  cor: AppTema.verde,
-                  corSombra: AppTema.verdeEscuro,
-                  delay: 400,
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const TelaCategorias(modoMultiplayer: false),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                _BotaoMenu(
-                  imagemAsset: 'assets/dois_jogadores.png',
-                  titulo: '2 Jogadores',
-                  subtitulo: 'Vez a vez no mesmo celular',
-                  cor: AppTema.azul,
-                  corSombra: AppTema.azulEscuro,
-                  delay: 500,
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const TelaCategorias(modoMultiplayer: true),
-                    ),
+                      Image.asset('assets/images/logo_jam_labs.png', height: 40),
+                    ],
                   ),
                 ),
 
-                const SizedBox(height: 16),
-
-                _BotaoMenu(
-                  imagemAsset: 'assets/trofeu.png',
-                  titulo: 'Placar',
-                  subtitulo: 'Veja as pontuações',
-                  cor: AppTema.amarelo,
-                  corSombra: const Color(0xFFCCA800),
-                  delay: 600,
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const TelaPontuacao()),
+                // Ícone de configuração reduzido para 30
+                Positioned(
+                  top: 10,
+                  right: 20,
+                  child: GestureDetector(
+                    onTap: () {
+                      AudioManager.instance.playClique();
+                      _abrirConfiguracoesAudio();
+                    },
+                    child: Image.asset('assets/images/ic_config.png', width: 30),
                   ),
                 ),
-
-                const SizedBox(height: 40),
-
-                Text(
-                  'Feito por Joab, Augusto, Arthur e Michael. 💙',
-                  style: TextStyle(fontSize: 12, color: AppTema.neutroEsc),
-                ).animate().fadeIn(delay: 800.ms),
               ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }
 }
 
-class _BotaoMenu extends StatefulWidget {
-  final String imagemAsset;
-  final String titulo;
-  final String subtitulo;
-  final Color cor;
-  final Color corSombra;
-  final int delay;
-  final VoidCallback onTap;
+class _BotaoCustomizado extends StatelessWidget {
+  final String imagem;
+  final double largura;
+  final VoidCallback aoPressionar;
 
-  const _BotaoMenu({
-    required this.imagemAsset,
-    required this.titulo,
-    required this.subtitulo,
-    required this.cor,
-    required this.corSombra,
-    required this.delay,
-    required this.onTap,
-  });
-
-  @override
-  State<_BotaoMenu> createState() => _BotaoMenuState();
-}
-
-class _BotaoMenuState extends State<_BotaoMenu> {
-  bool _pressionado = false;
+  const _BotaoCustomizado({required this.imagem, required this.largura, required this.aoPressionar});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTapDown: (_) => setState(() => _pressionado = true),
-      onTapUp: (_) {
-        setState(() => _pressionado = false);
-        widget.onTap();
-      },
-      onTapCancel: () => setState(() => _pressionado = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 80),
-        width: double.infinity,
-        height: 72,
-        decoration: BoxDecoration(
-          color: widget.cor,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: widget.corSombra,
-              offset: Offset(0, _pressionado ? 1 : 5),
-              blurRadius: 0,
-            ),
-          ],
-        ),
-        transform: Matrix4.translationValues(0, _pressionado ? 4 : 0, 0),
-        child: Row(
-          children: [
-            const SizedBox(width: 12),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.asset(
-                widget.imagemAsset,
-                width: 52,
-                height: 52,
-                fit: BoxFit.contain,
-              ),
-            ),
-            const SizedBox(width: 14),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.titulo,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                Text(
-                  widget.subtitulo,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.85),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-            const Spacer(),
-            const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 18),
-            const SizedBox(width: 20),
-          ],
-        ),
+      onTap: aoPressionar,
+      child: Container(
+        width: largura,
+        decoration: BoxDecoration(image: DecorationImage(image: AssetImage(imagem), fit: BoxFit.contain)),
+        child: const AspectRatio(aspectRatio: 4.5),
       ),
-    )
-        .animate()
-        .fadeIn(delay: Duration(milliseconds: widget.delay))
-        .slideY(begin: 0.2, end: 0);
+    );
   }
 }

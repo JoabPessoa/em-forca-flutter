@@ -1,28 +1,15 @@
-// ============================================================
-// TELA DO JOGO
-// Equivalente ao seu JogoTela.java — toda a lógica do jogo aqui!
-//
-// COMPARAÇÃO JAVA → FLUTTER:
-//   JLabel lblPalavraSecreta   → Widget _buildMascara()
-//   JPanel painelBoneco        → Widget BonecoForca()
-//   JPanel painelTeclado       → Widget _buildTeclado()
-//   processarJogada()          → _processarJogada()
-//   verificarVitoria()         → _verificarVitoria()
-//   verificarDerrota()         → _verificarDerrota()
-//   comprarDica()              → _revelarDica()
-// ============================================================
-
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../database/database_helper.dart';
 import '../models/palavra.dart';
 import '../theme/app_tema.dart';
 import '../widgets/boneco_forca.dart';
+import '../audio_manager.dart';
 
 class TelaJogo extends StatefulWidget {
   final String categoria;
   final bool modoMultiplayer;
-  final int jogadorAtual; // 1 ou 2 (0 = single player)
+  final int jogadorAtual;
 
   const TelaJogo({
     super.key,
@@ -36,32 +23,33 @@ class TelaJogo extends StatefulWidget {
 }
 
 class _TelaJogoState extends State<TelaJogo> {
-  // --- ESTADO DO JOGO (equivalente às variáveis do JogoTela.java) ---
   Palavra? _palavraAtual;
   Set<String> _letrasDescobertas = {};
   Set<String> _letrasErradas = {};
   int _erros = 0;
   static const int _maxErros = 7;
-  bool _categoriaRevelada = false;
   bool _dicaRevelada = false;
   bool _carregando = true;
   int _jogadorAtual = 1;
 
-  // Pontuação da sessão (modo 2 jogadores)
   int _vitoriasJ1 = 0;
   int _vitoriasJ2 = 0;
+
+  bool _animandoDesbloqueio = false;
+  bool _toastVisivel = false;
+  bool _toastExpandido = false;
+  String _mensagemToast = '';
 
   @override
   void initState() {
     super.initState();
     _jogadorAtual = widget.jogadorAtual;
     _iniciarNovoJogo();
+
+    // Toca a música da tela de jogo!
+    AudioManager.instance.playMusica('musica_jogo.mp3');
   }
 
-  // ============================================================
-  // INICIAR NOVO JOGO
-  // Equivalente ao iniciarNovoJogo() do JogoTela.java
-  // ============================================================
   Future<void> _iniciarNovoJogo() async {
     setState(() => _carregando = true);
 
@@ -81,85 +69,90 @@ class _TelaJogoState extends State<TelaJogo> {
       _letrasDescobertas = {};
       _letrasErradas = {};
       _erros = 0;
-      _categoriaRevelada = false;
       _dicaRevelada = false;
       _carregando = false;
+      _animandoDesbloqueio = false;
     });
   }
 
-  // ============================================================
-  // PROCESSAR JOGADA
-  // Equivalente ao processarJogada(BotaoDuo btn) do JogoTela.java
-  // ============================================================
   void _processarJogada(String letra) {
     if (_palavraAtual == null) return;
     final palavraReal = _palavraAtual!.texto.toUpperCase();
 
+    // 🎵 O SOM DO CLIQUE ENTRA EXATAMENTE AQUI!
+    AudioManager.instance.playClique();
+
     setState(() {
       if (palavraReal.contains(letra)) {
-        // ACERTOU!
         _letrasDescobertas.add(letra);
         _verificarVitoria();
       } else {
-        // ERROU!
+        int errosAntes = _erros;
         _letrasErradas.add(letra);
         _erros++;
+
+        if (errosAntes == 3 && _erros == 4) {
+          _animarDestrancarDica();
+        }
+
         _verificarDerrota();
       }
     });
   }
 
-  // ============================================================
-  // REVELAR DICA
-  // A dica só é liberada após 3 erros.
-  // Antes disso exibe mensagem de bloqueio.
-  // ============================================================
-  void _revelarDica(bool isCategoria) {
-    if (_erros < 3) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: const [
-              Text('🔒', style: TextStyle(fontSize: 18)),
-              SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  'A dica só é liberada após perder 3 vidas.',
-                  style: TextStyle(fontWeight: FontWeight.w700),
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: AppTema.texto,
-          duration: const Duration(seconds: 2),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          margin: const EdgeInsets.all(16),
-        ),
-      );
+  void _animarDestrancarDica() async {
+    setState(() => _animandoDesbloqueio = true);
+    await Future.delayed(const Duration(milliseconds: 1000));
+    if (mounted) setState(() => _animandoDesbloqueio = false);
+  }
+
+  void _mostrarAvisoCustomizado(String msg) async {
+    if (_toastVisivel) return;
+
+    setState(() {
+      _mensagemToast = msg;
+      _toastVisivel = true;
+      _toastExpandido = false;
+    });
+
+    await Future.delayed(const Duration(milliseconds: 300));
+    if (!mounted) return;
+
+    setState(() => _toastExpandido = true);
+
+    await Future.delayed(const Duration(seconds: 3));
+    if (!mounted) return;
+
+    setState(() => _toastExpandido = false);
+
+    await Future.delayed(const Duration(milliseconds: 300));
+    if (!mounted) return;
+
+    setState(() => _toastVisivel = false);
+  }
+
+  void _revelarDica() {
+    if (_erros < 4) {
+      _mostrarAvisoCustomizado('Perca 4 corações primeiro para liberar a dica!');
+      return;
+    }
+    if (_maxErros - _erros <= 1) {
+      _mostrarAvisoCustomizado('Atenção! Comprar a dica com 1 coração seria fatal!');
       return;
     }
 
-    // Dica liberada após 3 erros — revela sem custar vida
     setState(() {
-      if (isCategoria) {
-        _categoriaRevelada = true;
-      } else {
-        _dicaRevelada = true;
-      }
+      _erros++;
+      _dicaRevelada = true;
     });
   }
 
-  // ============================================================
-  // VERIFICAR VITÓRIA
-  // ============================================================
   void _verificarVitoria() {
     if (_palavraAtual == null) return;
     final palavraReal = _palavraAtual!.texto.toUpperCase();
     final todasLetras = palavraReal.split('').where((c) => c != ' ' && c != '-').toSet();
 
     if (todasLetras.every((l) => _letrasDescobertas.contains(l))) {
-      // Delay pequeno para o jogador ver a última letra antes do popup
       Future.delayed(const Duration(milliseconds: 400), () {
         if (!mounted) return;
         _mostrarResultado(vitoria: true);
@@ -167,9 +160,6 @@ class _TelaJogoState extends State<TelaJogo> {
     }
   }
 
-  // ============================================================
-  // VERIFICAR DERROTA
-  // ============================================================
   void _verificarDerrota() {
     if (_erros >= _maxErros) {
       Future.delayed(const Duration(milliseconds: 300), () {
@@ -179,11 +169,7 @@ class _TelaJogoState extends State<TelaJogo> {
     }
   }
 
-  // ============================================================
-  // MOSTRAR RESULTADO (Dialog de vitória ou derrota)
-  // ============================================================
   void _mostrarResultado({required bool vitoria}) {
-    // Atualiza pontuação do jogador atual
     if (widget.modoMultiplayer) {
       if (vitoria) {
         if (_jogadorAtual == 1) _vitoriasJ1++;
@@ -202,11 +188,8 @@ class _TelaJogoState extends State<TelaJogo> {
         palavra: _palavraAtual?.texto ?? '',
         modoMultiplayer: widget.modoMultiplayer,
         jogadorAtual: _jogadorAtual,
-        vitoriasJ1: _vitoriasJ1,
-        vitoriasJ2: _vitoriasJ2,
         onJogarNovamente: () {
           Navigator.pop(context);
-          // No modo 2 jogadores, alterna o jogador
           if (widget.modoMultiplayer) {
             setState(() {
               _jogadorAtual = _jogadorAtual == 1 ? 2 : 1;
@@ -215,6 +198,7 @@ class _TelaJogoState extends State<TelaJogo> {
           _iniciarNovoJogo();
         },
         onSair: () {
+          AudioManager.instance.playMusica('musica_menu.mp3');
           Navigator.pop(context);
           Navigator.pop(context);
         },
@@ -242,171 +226,250 @@ class _TelaJogoState extends State<TelaJogo> {
   }
 
   // ============================================================
-  // BUILD PRINCIPAL
+  // NOVO POP-UP DE SAÍDA CUSTOMIZADO (Com o papel desenhado)
   // ============================================================
+  void _confirmarSaida() {
+    showDialog(
+      context: context,
+      builder: (_) => Dialog(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        child: Container(
+          width: 320,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/bg_dialog.png'),
+              fit: BoxFit.fill,
+            ),
+          ),
+          padding: const EdgeInsets.fromLTRB(30, 45, 30, 30),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Sair do jogo?',
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: AppTema.texto),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Seu progresso será perdido.',
+                style: TextStyle(color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w600),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: const Text('Continuar', style: TextStyle(color: AppTema.azul, fontWeight: FontWeight.w900, fontSize: 18)),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context); // Fecha o dialog
+                      Navigator.pop(context); // Fecha a tela do jogo
+                    },
+                    child: const Text('Sair', style: TextStyle(color: AppTema.vermelho, fontWeight: FontWeight.w900, fontSize: 18)),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_carregando) {
-      return const Scaffold(
-        backgroundColor: AppTema.fundo,
-        body: Center(child: CircularProgressIndicator(color: AppTema.verde)),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    final corCategoria = AppTema.corDaCategoria(widget.categoria);
-
     return Scaffold(
-      backgroundColor: AppTema.fundo,
-      appBar: AppBar(
-        backgroundColor: AppTema.fundo,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.close, color: AppTema.texto),
-          onPressed: () => _confirmarSaida(),
-        ),
-        title: widget.modoMultiplayer
-            ? _buildIndicadorJogador()
-            : _buildInfoCategoria(corCategoria),
-        centerTitle: true,
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Placar multiplayer
-            if (widget.modoMultiplayer) _buildPlacar(),
-
-            // Botões de dica
-            _buildBotoesDica(),
-
-            // Boneco da forca
-            Expanded(
-              flex: 3,
-              child: BonecoForca(erros: _erros, maxErros: _maxErros),
-            ),
-
-            // Vidas restantes
-            _buildVidas(),
-
-            // Máscara da palavra
-            _buildMascara(),
-
-            const SizedBox(height: 8),
-
-            // Teclado
-            Expanded(
-              flex: 3,
-              child: _buildTeclado(),
-            ),
-
-            const SizedBox(height: 8),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // --- WIDGETS AUXILIARES ---
-
-  Widget _buildIndicadorJogador() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      decoration: BoxDecoration(
-        color: _jogadorAtual == 1 ? AppTema.verde : AppTema.azul,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        '🎮 Vez do Jogador $_jogadorAtual',
-        style: const TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.w800,
-          fontSize: 14,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInfoCategoria(Color cor) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
-      decoration: BoxDecoration(
-        color: cor.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: cor.withOpacity(0.3)),
-      ),
-      child: Text(
-        '${AppTema.iconeDaCategoria(widget.categoria)} ${widget.categoria}',
-        style: TextStyle(
-          color: cor,
-          fontWeight: FontWeight.w800,
-          fontSize: 13,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPlacar() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
-      child: Row(
+      body: Stack(
+        fit: StackFit.expand,
         children: [
-          _ChipPlacar(
-            nome: 'J1',
-            vitorias: _vitoriasJ1,
-            ativo: _jogadorAtual == 1,
-            cor: AppTema.verde,
-          ),
-          const Spacer(),
-          Text(
-            'VS',
-            style: TextStyle(
-              fontWeight: FontWeight.w900,
-              color: AppTema.neutroEsc,
-              fontSize: 13,
+          Image.asset('assets/images/bg_quadro_branco.jpg', fit: BoxFit.cover),
+
+          SafeArea(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: GestureDetector(
+                          onTap: () => _confirmarSaida(),
+                          child: Image.asset('assets/images/ic_fechar.png', width: 28),
+                        ),
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (widget.modoMultiplayer) _buildPlacar(),
+                          if (widget.modoMultiplayer) const SizedBox(height: 4),
+                          Text(
+                            widget.categoria,
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTema.texto),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+
+                _buildDica(),
+
+                Expanded(
+                  flex: 3,
+                  child: BonecoForca(erros: _erros, maxErros: _maxErros),
+                ),
+
+                _buildVidas(),
+
+                _buildMascara(),
+                const SizedBox(height: 16),
+
+                _buildTeclado(),
+                const SizedBox(height: 16),
+              ],
             ),
           ),
-          const Spacer(),
-          _ChipPlacar(
-            nome: 'J2',
-            vitorias: _vitoriasJ2,
-            ativo: _jogadorAtual == 2,
-            cor: AppTema.azul,
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildBotoesDica() {
-    final dicaBloqueada = _erros < 3;
-    final dica = _palavraAtual?.dica ?? '';
-    final catIcone = AppTema.iconeDaCategoria(_palavraAtual?.categoria ?? '');
-    final catNome = _palavraAtual?.categoria ?? '';
-    final mostrarCategoria = widget.categoria == 'Todas';
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: Row(
-        children: [
-          if (mostrarCategoria) ...[
-            Expanded(
-              child: _BotaoDica(
-                texto: _categoriaRevelada ? '$catIcone $catNome' : '🏷️ Categoria',
-                ativo: !_categoriaRevelada,
-                bloqueada: dicaBloqueada && !_categoriaRevelada,
-                onTap: () => _revelarDica(true),
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeOutBack,
+            bottom: _toastVisivel ? 40 : -100,
+            left: 0,
+            right: 0,
+            child: IgnorePointer(
+              child: Center(
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 400),
+                  curve: Curves.easeInOut,
+                  height: 50,
+                  width: _toastExpandido ? MediaQuery.of(context).size.width * 0.85 : 50,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD0D0D0),
+                    borderRadius: BorderRadius.circular(25),
+                    border: Border.all(color: AppTema.texto, width: 2),
+                    boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 10, offset: Offset(0, 4))],
+                  ),
+                  child: Stack(
+                    children: [
+                      AnimatedAlign(
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.easeInOut,
+                        alignment: _toastExpandido ? Alignment.centerLeft : Alignment.center,
+                        child: Padding(
+                          padding: EdgeInsets.only(left: _toastExpandido ? 14 : 0),
+                          child: Image.asset('assets/images/ic_cadeado_f.png', width: 20),
+                        ),
+                      ),
+                      if (_toastExpandido)
+                        Positioned(
+                          left: 45, right: 12, top: 0, bottom: 0,
+                          child: Center(
+                            child: Text(
+                              _mensagemToast,
+                              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: AppTema.texto),
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
               ),
             ),
-            const SizedBox(width: 8),
-          ],
-          Expanded(
-            child: _BotaoDica(
-              texto: _dicaRevelada ? '💡 $dica' : '💡 Dica',
-              ativo: !_dicaRevelada,
-              bloqueada: dicaBloqueada && !_dicaRevelada,
-              onTap: () => _revelarDica(false),
-            ),
           ),
         ],
+      ),
+    );
+  }
+
+  // ============================================================
+  // NOVO PLACAR MULTIPLAYER (Pontuações nas laterais)
+  // ============================================================
+  Widget _buildPlacar() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        // Pontuação J1
+        Text(
+          'J1: $_vitoriasJ1',
+          style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: AppTema.verde),
+        ),
+
+        const SizedBox(width: 16),
+
+        // Pílula Central
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+          decoration: BoxDecoration(
+            color: _jogadorAtual == 1 ? AppTema.verde : AppTema.azul,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Text(
+            'Vez do Jogador $_jogadorAtual',
+            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 14),
+          ),
+        ),
+
+        const SizedBox(width: 16),
+
+        // Pontuação J2
+        Text(
+          '$_vitoriasJ2 :J2',
+          style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: AppTema.azul),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDica() {
+    final dica = _palavraAtual?.dica ?? '';
+    bool bloqueada = _erros < 4;
+
+    return SizedBox(
+      height: 60,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+        child: _dicaRevelada
+            ? Center(
+          child: Text(dica, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTema.texto)),
+        )
+            : GestureDetector(
+          onTap: _revelarDica,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Image.asset(
+                (bloqueada || _animandoDesbloqueio) ? 'assets/images/ic_lampada_lckd.png' : 'assets/images/ic_lampada.png',
+                width: 140,
+              ),
+              if (bloqueada || _animandoDesbloqueio)
+                AnimatedOpacity(
+                  opacity: _animandoDesbloqueio ? 0.0 : 1.0,
+                  duration: const Duration(milliseconds: 600),
+                  child: AnimatedScale(
+                    scale: _animandoDesbloqueio ? 1.5 : 1.0,
+                    duration: const Duration(milliseconds: 600),
+                    child: Image.asset(
+                      _animandoDesbloqueio ? 'assets/images/ic_cadeado_a.png' : 'assets/images/ic_cadeado_f.png',
+                      width: 24,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -419,10 +482,7 @@ class _TelaJogoState extends State<TelaJogo> {
         final viva = i < vidasRestantes;
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 3),
-          child: Text(
-            viva ? '❤️' : '🖤',
-            style: TextStyle(fontSize: viva ? 18 : 14),
-          ),
+          child: Image.asset(viva ? 'assets/images/ic_coracao_cheio.png' : 'assets/images/ic_coracao_vazio.png', width: 24),
         );
       }),
     );
@@ -439,32 +499,17 @@ class _TelaJogoState extends State<TelaJogo> {
         spacing: 6,
         runSpacing: 6,
         children: palavraReal.split('').map((letra) {
-          if (letra == ' ') {
-            return const SizedBox(width: 16);
-          }
+          if (letra == ' ') return const SizedBox(width: 16);
           final revelada = letra == '-' || _letrasDescobertas.contains(letra);
           return AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            width: 30,
-            height: 36,
+            width: 30, height: 36,
             decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: revelada ? AppTema.verde : AppTema.neutroEsc,
-                  width: 3,
-                ),
-              ),
+                border: Border(
+                    bottom: BorderSide(color: AppTema.texto, width: 3)
+                )
             ),
-            child: Center(
-              child: Text(
-                revelada ? letra : '',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w900,
-                  color: AppTema.texto,
-                ),
-              ),
-            ),
+            child: Center(child: Text(revelada ? letra : '', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: AppTema.texto))),
           );
         }).toList(),
       ),
@@ -473,89 +518,44 @@ class _TelaJogoState extends State<TelaJogo> {
 
   Widget _buildTeclado() {
     const letras = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    final larguraTela = MediaQuery.of(context).size.width;
+    final availableWidth = larguraTela - 32;
+    final keyWidth = (availableWidth - (6 * 6)) / 7;
+    final keyHeight = keyWidth * 1.2;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: GridView.count(
-        crossAxisCount: 7,
-        mainAxisSpacing: 6,
-        crossAxisSpacing: 6,
-        physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        spacing: 6, runSpacing: 6,
         children: letras.split('').map((letra) {
           final acertou = _letrasDescobertas.contains(letra);
           final errou = _letrasErradas.contains(letra);
           final usado = acertou || errou;
 
-          Color corFundo = AppTema.neutro;
-          Color corSombra = AppTema.neutroEsc;
-          Color corTexto = AppTema.texto;
-
-          if (acertou) {
-            corFundo = AppTema.verde;
-            corSombra = AppTema.verdeEscuro;
-            corTexto = Colors.white;
-          } else if (errou) {
-            corFundo = AppTema.vermelho;
-            corSombra = AppTema.vermelhoEsc;
-            corTexto = Colors.white;
-          }
+          String imagemFundo = 'assets/images/key_bg_neutro.png';
+          if (acertou) imagemFundo = 'assets/images/key_bg_certo.png';
+          else if (errou) imagemFundo = 'assets/images/key_bg_errado.png';
 
           return _BotaoLetra(
-            letra: letra,
-            corFundo: corFundo,
-            corSombra: corSombra,
-            corTexto: corTexto,
-            desativado: usado,
+            letra: letra, imagemFundo: imagemFundo, desativado: usado, largura: keyWidth, altura: keyHeight,
             onTap: usado ? null : () => _processarJogada(letra),
           );
         }).toList(),
       ),
     );
   }
-
-  void _confirmarSaida() {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Sair do jogo?'),
-        content: const Text('Seu progresso será perdido.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Continuar'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
-            child: const Text('Sair', style: TextStyle(color: AppTema.vermelho)),
-          ),
-        ],
-      ),
-    );
-  }
 }
-
-// ============================================================
-// WIDGETS AUXILIARES
-// ============================================================
 
 class _BotaoLetra extends StatefulWidget {
   final String letra;
-  final Color corFundo;
-  final Color corSombra;
-  final Color corTexto;
+  final String imagemFundo;
   final bool desativado;
+  final double largura;
+  final double altura;
   final VoidCallback? onTap;
 
-  const _BotaoLetra({
-    required this.letra,
-    required this.corFundo,
-    required this.corSombra,
-    required this.corTexto,
-    required this.desativado,
-    this.onTap,
-  });
+  const _BotaoLetra({required this.letra, required this.imagemFundo, required this.desativado, required this.largura, required this.altura, this.onTap});
 
   @override
   State<_BotaoLetra> createState() => _BotaoLetraState();
@@ -568,287 +568,94 @@ class _BotaoLetraState extends State<_BotaoLetra> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTapDown: widget.desativado ? null : (_) => setState(() => _pressionado = true),
-      onTapUp: widget.desativado
-          ? null
-          : (_) {
-              setState(() => _pressionado = false);
-              widget.onTap?.call();
-            },
+      onTapUp: widget.desativado ? null : (_) { setState(() => _pressionado = false); widget.onTap?.call(); },
       onTapCancel: () => setState(() => _pressionado = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 60),
-        decoration: BoxDecoration(
-          color: widget.corFundo,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: widget.corSombra,
-              offset: Offset(0, _pressionado || widget.desativado ? 1 : 4),
-              blurRadius: 0,
-            ),
-          ],
-        ),
-        transform: Matrix4.translationValues(
-          0,
-          _pressionado ? 3 : 0,
-          0,
-        ),
-        child: Center(
-          child: Text(
-            widget.letra,
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w800,
-              color: widget.corTexto,
-            ),
-          ),
-        ),
+        width: widget.largura, height: widget.altura,
+        transform: Matrix4.translationValues(0, _pressionado ? 3 : 0, 0),
+        decoration: BoxDecoration(image: DecorationImage(image: AssetImage(widget.imagemFundo), fit: BoxFit.fill)),
+        child: Center(child: Text(widget.letra, style: TextStyle(fontSize: widget.largura * 0.55, fontWeight: FontWeight.w600, color: widget.desativado ? Colors.white : AppTema.texto))),
       ),
     );
   }
 }
 
-class _BotaoDica extends StatelessWidget {
-  final String texto;
-  final bool ativo;
-  final bool bloqueada;
-  final VoidCallback onTap;
-
-  const _BotaoDica({
-    required this.texto,
-    required this.ativo,
-    required this.onTap,
-    this.bloqueada = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    // Estados visuais:
-    // bloqueada = cinza com cadeado (menos de 3 erros)
-    // ativo     = azul clicável (3+ erros, ainda não revelada)
-    // !ativo    = cinza desabilitado (já revelada)
-
-    Color corFundo;
-    Color corBorda;
-    Color corTexto;
-
-    if (bloqueada) {
-      corFundo = AppTema.neutro.withOpacity(0.6);
-      corBorda = AppTema.neutroEsc.withOpacity(0.4);
-      corTexto = AppTema.neutroEsc;
-    } else if (ativo) {
-      corFundo = AppTema.azul.withOpacity(0.15);
-      corBorda = AppTema.azul.withOpacity(0.4);
-      corTexto = AppTema.azulEscuro;
-    } else {
-      corFundo = AppTema.neutro;
-      corBorda = AppTema.neutroEsc;
-      corTexto = AppTema.neutroEsc;
-    }
-
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-        decoration: BoxDecoration(
-          color: corFundo,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: corBorda),
-        ),
-        child: Opacity(
-          opacity: bloqueada ? 0.6 : 1.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (bloqueada)
-                const Padding(
-                  padding: EdgeInsets.only(right: 4),
-                  child: Icon(Icons.lock, size: 12, color: AppTema.neutroEsc),
-                ),
-              Flexible(
-                child: Text(
-                  bloqueada ? '🔒 Bloqueada' : texto,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    color: corTexto,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _ChipPlacar extends StatelessWidget {
-  final String nome;
-  final int vitorias;
-  final bool ativo;
-  final Color cor;
-
-  const _ChipPlacar({
-    required this.nome,
-    required this.vitorias,
-    required this.ativo,
-    required this.cor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      decoration: BoxDecoration(
-        color: ativo ? cor : AppTema.neutro,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: ativo
-            ? [BoxShadow(color: cor.withOpacity(0.4), blurRadius: 8, offset: const Offset(0, 3))]
-            : [],
-      ),
-      child: Text(
-        '$nome  $vitorias ⭐',
-        style: TextStyle(
-          fontWeight: FontWeight.w800,
-          fontSize: 13,
-          color: ativo ? Colors.white : AppTema.neutroEsc,
-        ),
-      ),
-    );
-  }
-}
-
-// ============================================================
-// DIALOG DE RESULTADO (Vitória / Derrota)
-// ============================================================
 class _DialogResultado extends StatelessWidget {
   final bool vitoria;
   final String palavra;
   final bool modoMultiplayer;
   final int jogadorAtual;
-  final int vitoriasJ1;
-  final int vitoriasJ2;
   final VoidCallback onJogarNovamente;
   final VoidCallback onSair;
 
   const _DialogResultado({
-    required this.vitoria,
-    required this.palavra,
-    required this.modoMultiplayer,
-    required this.jogadorAtual,
-    required this.vitoriasJ1,
-    required this.vitoriasJ2,
-    required this.onJogarNovamente,
-    required this.onSair,
+    required this.vitoria, required this.palavra, required this.modoMultiplayer, required this.jogadorAtual, required this.onJogarNovamente, required this.onSair,
   });
 
   @override
   Widget build(BuildContext context) {
-    final emoji = vitoria ? '🎉' : '💀';
+    final icone = vitoria ? 'assets/images/ic_vitoria.png' : 'assets/images/ic_derrota.png';
     final titulo = vitoria ? 'Acertou!' : 'Game Over!';
-    final cor = vitoria ? AppTema.verde : AppTema.vermelho;
+    final corTitulo = vitoria ? AppTema.verde : AppTema.vermelho;
+
+    // NOVA REGRA DO BOTÃO: Se for multiplayer, carrega o botão azul de Continuar
+    final String caminhoBotao;
+    if (modoMultiplayer) {
+      caminhoBotao = 'assets/images/btn_continuar.png';
+    } else {
+      caminhoBotao = vitoria ? 'assets/images/btn_jogar_verde.png' : 'assets/images/btn_jogar_vermelho.png';
+    }
 
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      child: Padding(
-        padding: const EdgeInsets.all(28),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(emoji, style: const TextStyle(fontSize: 60))
-                .animate()
-                .scale(duration: 500.ms, curve: Curves.elasticOut),
-
-            const SizedBox(height: 12),
-
-            Text(
-              titulo,
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.w900,
-                color: cor,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 320,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/bg_dialog.png'),
+                fit: BoxFit.fill,
               ),
             ),
+            padding: const EdgeInsets.fromLTRB(30, 45, 30, 30),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(icone, width: 75).animate().scale(duration: 500.ms, curve: Curves.elasticOut),
+                const SizedBox(height: 8),
+                Text(titulo, style: TextStyle(fontSize: 32, fontWeight: FontWeight.w900, color: corTitulo)),
 
-            if (!vitoria) ...[
-              const SizedBox(height: 8),
-              Text(
-                'A palavra era:',
-                style: TextStyle(color: AppTema.neutroEsc, fontSize: 13),
-              ),
-              Text(
-                palavra,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w900,
-                  color: AppTema.texto,
-                  letterSpacing: 2,
-                ),
-              ),
-            ],
+                if (!vitoria) ...[
+                  const SizedBox(height: 12),
+                  const Text('A palavra era:', style: TextStyle(color: Colors.black54, fontSize: 14)),
+                  Text(palavra, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900, letterSpacing: 2, color: AppTema.texto), textAlign: TextAlign.center),
+                ],
 
-            if (modoMultiplayer) ...[
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: AppTema.neutro,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(children: [
-                      const Text('J1', style: TextStyle(fontWeight: FontWeight.w800)),
-                      Text('$vitoriasJ1 ⭐', style: TextStyle(color: AppTema.verde, fontWeight: FontWeight.w900)),
-                    ]),
-                    const Text('VS', style: TextStyle(color: AppTema.neutroEsc)),
-                    Column(children: [
-                      const Text('J2', style: TextStyle(fontWeight: FontWeight.w800)),
-                      Text('$vitoriasJ2 ⭐', style: TextStyle(color: AppTema.azul, fontWeight: FontWeight.w900)),
-                    ]),
-                  ],
-                ),
-              ),
-            ],
+                const SizedBox(height: 24),
 
-            const SizedBox(height: 24),
-
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: cor,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                  elevation: 0,
+                GestureDetector(
+                  onTap: onJogarNovamente,
+                  child: Image.asset(caminhoBotao, width: 160),
                 ),
-                onPressed: onJogarNovamente,
-                child: Text(
-                  modoMultiplayer ? '▶️  Vez do Jogador ${jogadorAtual == 1 ? 2 : 1}' : '▶️  Jogar Novamente',
-                  style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
-                ),
-              ),
+              ],
             ),
+          ),
 
-            const SizedBox(height: 10),
+          const SizedBox(height: 12),
 
-            TextButton(
-              onPressed: onSair,
-              child: const Text(
-                'Voltar ao Menu',
-                style: TextStyle(color: AppTema.neutroEsc, fontWeight: FontWeight.w700),
-              ),
+          GestureDetector(
+            onTap: onSair,
+            child: Image.asset(
+              'assets/images/Menu_btn.png',
+              width: 120,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

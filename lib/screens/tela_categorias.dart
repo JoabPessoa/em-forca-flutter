@@ -1,8 +1,3 @@
-// ============================================================
-// TELA DE CATEGORIAS
-// O jogador escolhe em qual categoria quer jogar
-// ============================================================
-
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../database/database_helper.dart';
@@ -15,10 +10,10 @@ class TelaCategorias extends StatefulWidget {
   const TelaCategorias({super.key, required this.modoMultiplayer});
 
   @override
-  State<TelaCategorias> createState() => _TeleCategoriasState();
+  State<TelaCategorias> createState() => _TelaCategoriasState();
 }
 
-class _TeleCategoriasState extends State<TelaCategorias> {
+class _TelaCategoriasState extends State<TelaCategorias> {
   List<String> _categorias = [];
   bool _carregando = true;
 
@@ -36,71 +31,124 @@ class _TeleCategoriasState extends State<TelaCategorias> {
     });
   }
 
+  // Função para mapear o nome da categoria no Banco de Dados para a sua imagem desenhada
+  String _getImagemCategoria(String categoriaNome) {
+    switch (categoriaNome) {
+      case 'Todas':
+        return 'assets/images/btn_cat_todas.png';
+      case 'Comidas e Bebidas':
+        return 'assets/images/btn_cat_comidas.png';
+      case 'Esportes':
+        return 'assets/images/btn_cat_esportes.png';
+      case 'Filmes e Séries':
+        return 'assets/images/btn_cat_filmes.png';
+      case 'Música':
+        return 'assets/images/btn_cat_musica.png';
+      case 'Tecnologia':
+        return 'assets/images/btn_cat_tecnologia.png';
+      default:
+        return 'assets/images/btn_cat_todas.png'; // Fallback de segurança
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTema.fundo,
-      appBar: AppBar(
-        backgroundColor: AppTema.fundo,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppTema.texto),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          widget.modoMultiplayer ? '2 Jogadores' : '1 Jogador',
-          style: const TextStyle(
-            color: AppTema.texto,
-            fontWeight: FontWeight.w800,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // 1. FUNDO DO QUADRO BRANCO
+          Image.asset(
+            'assets/images/bg_quadro_branco.jpg',
+            fit: BoxFit.cover,
           ),
-        ),
-      ),
-      body: _carregando
-          ? const Center(child: CircularProgressIndicator(color: AppTema.verde))
-          : Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Escolha uma categoria',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w900,
-                      color: AppTema.texto,
-                    ),
-                  ).animate().fadeIn().slideY(begin: 0.2, end: 0),
 
-                  const SizedBox(height: 6),
-
-                  Text(
-                    'Em qual tema você quer jogar?',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: AppTema.neutroEsc,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ).animate().fadeIn(delay: 100.ms),
-
-                  const SizedBox(height: 24),
-
-                  Expanded(
-                    child: ListView.separated(
-                      itemCount: _categorias.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 12),
-                      itemBuilder: (context, index) {
-                        final cat = _categorias[index];
-                        return _CartaoCategoria(
-                          categoria: cat,
-                          delay: index * 80,
-                          onTap: () => _iniciarJogo(cat),
-                        );
-                      },
-                    ),
+          // 2. CONTEÚDO PRINCIPAL
+          SafeArea(
+            child: _carregando
+                ? const Center(child: CircularProgressIndicator(color: AppTema.verde))
+                : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // --- CABEÇALHO CUSTOMIZADO ---
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: Image.asset('assets/images/ic_voltar.png', width: 36),
+                        ),
+                      ),
+                      Text(
+                        widget.modoMultiplayer ? '2 Jogadores' : '1 Jogador',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w900,
+                          color: AppTema.texto,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // --- TÍTULOS ---
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Escolha um tema:',
+                        style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.w900,
+                          color: AppTema.texto,
+                        ),
+                      ).animate().fadeIn().slideY(begin: 0.2, end: 0),
+
+                      const SizedBox(height: 4),
+
+                      const Text(
+                        'O que vamos desenhar na forca hoje?',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black54,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ).animate().fadeIn(delay: 100.ms),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                // --- LISTA DE CATEGORIAS (AGORA COM AS SUAS IMAGENS) ---
+                Expanded(
+                  child: ListView.separated(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                    itemCount: _categorias.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 16),
+                    itemBuilder: (context, index) {
+                      final cat = _categorias[index];
+                      return _BotaoCategoriaImagem(
+                        caminhoImagem: _getImagemCategoria(cat),
+                        delay: index * 80,
+                        onTap: () => _iniciarJogo(cat),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -119,36 +167,28 @@ class _TeleCategoriasState extends State<TelaCategorias> {
 }
 
 // ============================================================
-// WIDGET: Cartão de Categoria
+// WIDGET: Botão de Categoria usando Imagem Customizada
 // ============================================================
-class _CartaoCategoria extends StatefulWidget {
-  final String categoria;
+class _BotaoCategoriaImagem extends StatefulWidget {
+  final String caminhoImagem;
   final int delay;
   final VoidCallback onTap;
 
-  const _CartaoCategoria({
-    required this.categoria,
+  const _BotaoCategoriaImagem({
+    required this.caminhoImagem,
     required this.delay,
     required this.onTap,
   });
 
   @override
-  State<_CartaoCategoria> createState() => _CartaoCategoriaState();
+  State<_BotaoCategoriaImagem> createState() => _BotaoCategoriaImagemState();
 }
 
-class _CartaoCategoriaState extends State<_CartaoCategoria> {
+class _BotaoCategoriaImagemState extends State<_BotaoCategoriaImagem> {
   bool _pressionado = false;
 
   @override
   Widget build(BuildContext context) {
-    final cor = AppTema.corDaCategoria(widget.categoria);
-    final corSombra = HSLColor.fromColor(cor)
-        .withLightness(
-          (HSLColor.fromColor(cor).lightness - 0.15).clamp(0.0, 1.0),
-        )
-        .toColor();
-    final emoji = AppTema.iconeDaCategoria(widget.categoria);
-
     return GestureDetector(
       onTapDown: (_) => setState(() => _pressionado = true),
       onTapUp: (_) {
@@ -157,37 +197,12 @@ class _CartaoCategoriaState extends State<_CartaoCategoria> {
       },
       onTapCancel: () => setState(() => _pressionado = false),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 80),
-        height: 72,
-        decoration: BoxDecoration(
-          color: cor,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: corSombra,
-              offset: Offset(0, _pressionado ? 1 : 5),
-              blurRadius: 0,
-            ),
-          ],
-        ),
+        duration: const Duration(milliseconds: 60),
+        // Efeito de pressionar a imagem para baixo
         transform: Matrix4.translationValues(0, _pressionado ? 4 : 0, 0),
-        child: Row(
-          children: [
-            const SizedBox(width: 20),
-            Text(emoji, style: const TextStyle(fontSize: 30)),
-            const SizedBox(width: 16),
-            Text(
-              widget.categoria,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            const Spacer(),
-            const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
-            const SizedBox(width: 20),
-          ],
+        child: Image.asset(
+          widget.caminhoImagem,
+          fit: BoxFit.contain, // Garante que a proporção da sua arte se mantenha intacta
         ),
       ),
     )
