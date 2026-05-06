@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="jogo_forca"
+        android:label="Em Forca"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

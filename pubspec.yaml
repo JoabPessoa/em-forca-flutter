@@ -13,16 +13,21 @@ dependencies:
   path: ^1.8.3              # Para localizar o banco no dispositivo
   google_fonts: ^6.1.0      # Fontes bonitas
   flutter_animate: ^4.3.0   # Animações suaves
+  audioplayers: ^5.2.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.13.1
   flutter_lints: ^3.0.0
 
 flutter:
   uses-material-design: true
   assets:
-    - assets/logo.png
-    - assets/um_jogador.png
-    - assets/dois_jogadores.png
-    - assets/trofeu.png
+    - assets/images/
+    - assets/audio/
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/images/icone_app.png"
