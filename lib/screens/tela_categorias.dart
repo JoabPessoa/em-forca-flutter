@@ -46,6 +46,8 @@ class _TelaCategoriasState extends State<TelaCategorias> {
         return 'assets/images/btn_cat_musica.png';
       case 'Tecnologia':
         return 'assets/images/btn_cat_tecnologia.png';
+      case 'Música - Cantores':
+        return 'assets/images/btn_cat_cantores.png';
       default:
         return 'assets/images/btn_cat_todas.png'; // Fallback de segurança
     }
