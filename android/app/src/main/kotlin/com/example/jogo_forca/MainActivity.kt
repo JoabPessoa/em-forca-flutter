@@ -1,5 +1,6 @@
-package com.example.jogo_forca
+package com.jamlabs.emforca
 
 import io.flutter.embedding.android.FlutterActivity
 
-class MainActivity : FlutterActivity()
+class MainActivity: FlutterActivity() {
+}
