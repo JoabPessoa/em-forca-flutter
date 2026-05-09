@@ -138,7 +138,7 @@ class DatabaseHelper {
       {'texto': 'MACARRAO', 'dica': 'Massa muito consumida no mundo', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'facil'},
       {'texto': 'BOLO', 'dica': 'Doce comum em aniversários', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'facil'},
       {'texto': 'PUDIM', 'dica': 'Sobremesa com calda de caramelo', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'medio'},
-      {'texto': 'CAFÉ', 'dica': 'Bebida estimulante muito consumida', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'facil'},
+      {'texto': 'CAFE', 'dica': 'Bebida estimulante muito consumida', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'facil'},
       {'texto': 'SUCO', 'dica': 'Bebida feita de frutas', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'facil'},
       {'texto': 'ACHOCOLATADO', 'dica': 'Bebida doce com leite e chocolate', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'medio'},
 
