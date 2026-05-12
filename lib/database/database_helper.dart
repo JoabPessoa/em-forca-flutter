@@ -180,6 +180,18 @@ class DatabaseHelper {
       {'texto': 'CAFE', 'dica': 'Bebida estimulante muito consumida', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'facil'},
       {'texto': 'SUCO', 'dica': 'Bebida feita de frutas', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'facil'},
       {'texto': 'ACHOCOLATADO', 'dica': 'Bebida doce com leite e chocolate', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'medio'},
+      {'texto': 'TAPIOCA', 'dica': 'Comida feita com goma de mandioca, comum no Nordeste', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'medio'},
+      {'texto': 'ACARAJE', 'dica': 'Comida baiana feita com massa de feijão-fradinho', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'dificil'},
+      {'texto': 'CUSCUZ', 'dica': 'Comida feita de milho, muito comum no café da manhã nordestino', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'medio'},
+      {'texto': 'MOQUECA', 'dica': 'Prato brasileiro feito com peixe e temperos', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'medio'},
+      {'texto': 'PAMONHA', 'dica': 'Comida feita de milho verde, doce ou salgada', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'medio'},
+      {'texto': 'CANJICA', 'dica': 'Doce típico de festas juninas feito com milho', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'medio'},
+      {'texto': 'HOT DOG', 'dica': 'Lanche feito com pão e salsicha', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'facil'},
+      {'texto': 'BATATA FRITA', 'dica': 'Acompanhamento crocante muito comum em lanchonetes', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'facil'},
+      {'texto': 'PANQUECA', 'dica': 'Massa fina recheada, doce ou salgada', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'medio'},
+      {'texto': 'TACOS', 'dica': 'Comida mexicana feita com tortilha e recheio', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'medio'},
+      {'texto': 'YAKISOBA', 'dica': 'Prato oriental com macarrão, legumes e molho', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'dificil'},
+      {'texto': 'MILK SHAKE', 'dica': 'Bebida gelada feita com leite e sorvete', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'medio'},
 
       // --- MÚSICA ---
       {'texto': 'GUITARRA', 'dica': 'Instrumento elétrico de cordas', 'categoria': 'Música', 'dificuldade': 'medio'},
