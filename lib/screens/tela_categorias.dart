@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../database/database_helper.dart';
 import '../theme/app_tema.dart';
+import '../audio_manager.dart';
 import 'tela_jogo.dart';
+import 'tela_personalizacao.dart';
 
 class TelaCategorias extends StatefulWidget {
   final bool modoMultiplayer;
@@ -16,6 +18,7 @@ class TelaCategorias extends StatefulWidget {
 class _TelaCategoriasState extends State<TelaCategorias> {
   List<String> _categorias = [];
   bool _carregando = true;
+  int _nivelDificuldade = 1;
 
   @override
   void initState() {
@@ -26,16 +29,20 @@ class _TelaCategoriasState extends State<TelaCategorias> {
   Future<void> _carregarCategorias() async {
     final cats = await DatabaseHelper.instance.buscarCategorias();
     setState(() {
-      _categorias = ['Todas', ...cats]; // Adiciona "Todas" no início
+      // Aqui definimos a ordem exata: Personalizada no topo, Todas em seguida, e o resto depois!
+      _categorias = ['Personalizada', 'Todas', ...cats];
       _carregando = false;
     });
   }
 
-  // Função para mapear o nome da categoria no Banco de Dados para a sua imagem desenhada
   String _getImagemCategoria(String categoriaNome) {
     switch (categoriaNome) {
+      case 'Personalizada':
+        return 'assets/images/btn_cat_personalizada.png'; // A sua nova arte do lápis!
       case 'Todas':
-        return 'assets/images/btn_cat_todas.png';
+        return 'assets/images/btn_cat_todas.png'; // O botão de "Todas" de volta ao jogo!
+      case 'Animais':
+        return 'assets/images/btn_cat_animais.png';
       case 'Comidas e Bebidas':
         return 'assets/images/btn_cat_comidas.png';
       case 'Esportes':
@@ -49,8 +56,65 @@ class _TelaCategoriasState extends State<TelaCategorias> {
       case 'Música - Cantores':
         return 'assets/images/btn_cat_cantores.png';
       default:
-        return 'assets/images/btn_cat_todas.png'; // Fallback de segurança
+        return 'assets/images/btn_cat_todas.png';
     }
+  }
+
+  String get _modoJogoSelecionado {
+    switch (_nivelDificuldade) {
+      case 1: return 'rodinhas';
+      case 2: return 'facil';
+      case 3: return 'medio';
+      case 4: return 'dificil';
+      default: return 'rodinhas';
+    }
+  }
+
+  Widget _buildEstrela(int nivelDaEstrela, String imgAcesa, String imgApagada) {
+    bool isAcesa = _nivelDificuldade >= nivelDaEstrela;
+    return GestureDetector(
+      onTap: () {
+        AudioManager.instance.playClique();
+        setState(() {
+          _nivelDificuldade = nivelDaEstrela;
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+        transform: Matrix4.translationValues(0, isAcesa ? -4 : 0, 0),
+        padding: const EdgeInsets.symmetric(horizontal: 6.0),
+        child: Image.asset(
+          isAcesa ? imgAcesa : imgApagada,
+          width: 50,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSeletorDificuldade() {
+    return Column(
+      children: [
+        const Text(
+          'Dificuldade:',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w900,
+            color: AppTema.texto,
+          ),
+        ).animate().fadeIn(delay: 200.ms),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildEstrela(1, 'assets/images/btn_nvl_bebe.png', 'assets/images/btn_nvl_bebe.png'),
+            _buildEstrela(2, 'assets/images/btn_nvl_facil.png', 'assets/images/btn_d_nvl_facil.png'),
+            _buildEstrela(3, 'assets/images/btn_nvl_medio.png', 'assets/images/btn_d_nvl_medio.png'),
+            _buildEstrela(4, 'assets/images/btn_nvl_dificil.png', 'assets/images/btn_d_nvl_dificil.png'),
+          ],
+        ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.2, end: 0),
+      ],
+    );
   }
 
   @override
@@ -59,20 +123,16 @@ class _TelaCategoriasState extends State<TelaCategorias> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 1. FUNDO DO QUADRO BRANCO
           Image.asset(
             'assets/images/bg_quadro_branco.jpg',
             fit: BoxFit.cover,
           ),
-
-          // 2. CONTEÚDO PRINCIPAL
           SafeArea(
             child: _carregando
                 ? const Center(child: CircularProgressIndicator(color: AppTema.verde))
                 : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // --- CABEÇALHO CUSTOMIZADO ---
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   child: Stack(
@@ -81,7 +141,10 @@ class _TelaCategoriasState extends State<TelaCategorias> {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: GestureDetector(
-                          onTap: () => Navigator.pop(context),
+                          onTap: () {
+                            AudioManager.instance.playClique();
+                            Navigator.pop(context);
+                          },
                           child: Image.asset('assets/images/ic_voltar.png', width: 36),
                         ),
                       ),
@@ -96,10 +159,7 @@ class _TelaCategoriasState extends State<TelaCategorias> {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 16),
-
-                // --- TÍTULOS ---
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Column(
@@ -113,9 +173,7 @@ class _TelaCategoriasState extends State<TelaCategorias> {
                           color: AppTema.texto,
                         ),
                       ).animate().fadeIn().slideY(begin: 0.2, end: 0),
-
                       const SizedBox(height: 4),
-
                       const Text(
                         'O que vamos desenhar na forca hoje?',
                         style: TextStyle(
@@ -128,9 +186,10 @@ class _TelaCategoriasState extends State<TelaCategorias> {
                   ),
                 ),
 
+                const SizedBox(height: 20),
+                _buildSeletorDificuldade(),
                 const SizedBox(height: 24),
 
-                // --- LISTA DE CATEGORIAS (AGORA COM AS SUAS IMAGENS) ---
                 Expanded(
                   child: ListView.separated(
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
@@ -155,11 +214,24 @@ class _TelaCategoriasState extends State<TelaCategorias> {
   }
 
   void _iniciarJogo(String categoria) {
+    AudioManager.instance.playClique();
+
+    if (categoria == 'Personalizada') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => TelaPersonalizacao(modoMultiplayer: widget.modoMultiplayer)),
+      );
+      return;
+    }
+
+    // Se clicar em "Todas" ou numa categoria específica, o banco de dados vai receber a lista adequadamente.
+    DatabaseHelper.instance.resetarMemoriaDePalavras();
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => TelaJogo(
-          categoria: categoria,
+          categorias: [categoria],
+          modoJogo: _modoJogoSelecionado,
           modoMultiplayer: widget.modoMultiplayer,
           jogadorAtual: widget.modoMultiplayer ? 1 : 0,
         ),
@@ -168,9 +240,6 @@ class _TelaCategoriasState extends State<TelaCategorias> {
   }
 }
 
-// ============================================================
-// WIDGET: Botão de Categoria usando Imagem Customizada
-// ============================================================
 class _BotaoCategoriaImagem extends StatefulWidget {
   final String caminhoImagem;
   final int delay;
@@ -200,11 +269,10 @@ class _BotaoCategoriaImagemState extends State<_BotaoCategoriaImagem> {
       onTapCancel: () => setState(() => _pressionado = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 60),
-        // Efeito de pressionar a imagem para baixo
         transform: Matrix4.translationValues(0, _pressionado ? 4 : 0, 0),
         child: Image.asset(
           widget.caminhoImagem,
-          fit: BoxFit.contain, // Garante que a proporção da sua arte se mantenha intacta
+          fit: BoxFit.contain,
         ),
       ),
     )

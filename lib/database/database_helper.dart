@@ -28,7 +28,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 2, // MUDANÇA 1: Aumentamos a versão para 2!
+      version: 3,
       onCreate: _criarTabelas,
       onUpgrade: (db, oldVersion, newVersion) async {
         // MUDANÇA 2: Se a versão aumentar, apaga o banco velho e cria o novo com as palavras atualizadas
@@ -299,45 +299,54 @@ class DatabaseHelper {
     await db.insert('pontuacao', {'jogador': 'Jogador 2', 'vitorias': 0, 'derrotas': 0});
   }
 
+// ============================================================
+  // BUSCAR PALAVRA COM LÓGICA DE ESCADA DE DIFICULDADE E MÚLTIPLAS CATEGORIAS
   // ============================================================
-  // BUSCAR PALAVRA ALEATÓRIA (COM MEMÓRIA!)
-  // ============================================================
-  Future<Palavra?> sortearPalavra({String? categoria}) async {
+  Future<Palavra?> sortearPalavra({List<String>? categorias, String? modoJogo}) async {
     final db = await database;
-    List<Map<String, dynamic>> resultado;
-
-    // Transforma a lista de IDs em um formato que o SQL entenda (ex: "1, 4, 10")
     String idsIgnorados = _palavrasJogadasId.isEmpty ? "0" : _palavrasJogadasId.join(',');
 
-    if (categoria != null && categoria != 'Todas') {
-      // MUDANÇA 3: Adicionamos o "AND id NOT IN" para filtrar as que já foram
-      resultado = await db.rawQuery(
-        'SELECT * FROM palavras WHERE categoria = ? AND id NOT IN ($idsIgnorados) ORDER BY RANDOM() LIMIT 1',
-        [categoria],
-      );
-    } else {
-      resultado = await db.rawQuery(
-        'SELECT * FROM palavras WHERE id NOT IN ($idsIgnorados) ORDER BY RANDOM() LIMIT 1',
-      );
+    // NOVO: Filtro para múltiplas categorias
+    String filtroCategoria = "";
+    if (categorias != null && categorias.isNotEmpty && !categorias.contains('Todas')) {
+      // Transforma ['Animais', 'Esportes'] em "'Animais', 'Esportes'"
+      String listaCats = categorias.map((c) => "'$c'").join(', ');
+      filtroCategoria = "categoria IN ($listaCats) AND ";
     }
 
-    // MUDANÇA 4: Se o resultado voltar vazio, o jogador já completou a categoria inteira!
-    // Então limpamos a memória e chamamos a função de novo para recomeçar as palavras.
+    String ordemDificuldade;
+    switch (modoJogo) {
+      case 'rodinhas':
+      case 'facil':
+        ordemDificuldade = "CASE WHEN dificuldade = 'facil' THEN 1 WHEN dificuldade = 'medio' THEN 2 ELSE 3 END";
+        break;
+      case 'medio':
+        ordemDificuldade = "CASE WHEN dificuldade IN ('facil', 'medio') THEN 1 ELSE 2 END";
+        break;
+      case 'dificil':
+      default:
+        ordemDificuldade = "1";
+        break;
+    }
+
+    final resultado = await db.rawQuery('''
+      SELECT * FROM palavras 
+      WHERE $filtroCategoria id NOT IN ($idsIgnorados) 
+      ORDER BY $ordemDificuldade, RANDOM() 
+      LIMIT 1
+    ''');
+
     if (resultado.isEmpty) {
       _palavrasJogadasId.clear();
-      return await sortearPalavra(categoria: categoria);
+      return await sortearPalavra(categorias: categorias, modoJogo: modoJogo);
     }
 
-    // Converte o banco para o nosso Objeto
     final palavraSorteada = Palavra.fromMap(resultado.first);
-
-    // MUDANÇA 5: Salva o ID dessa palavra para ela não ser chamada de novo neste ciclo
     _palavrasJogadasId.add(palavraSorteada.id!);
 
     return palavraSorteada;
   }
 
-  // Método opcional para você poder resetar a memória do jogo quando quiser (ex: ao ir pro Menu Inicial)
   void resetarMemoriaDePalavras() {
     _palavrasJogadasId.clear();
   }

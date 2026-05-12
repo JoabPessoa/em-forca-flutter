@@ -7,13 +7,15 @@ import '../widgets/boneco_forca.dart';
 import '../audio_manager.dart';
 
 class TelaJogo extends StatefulWidget {
-  final String categoria;
+  final List<String> categorias;
+  final String modoJogo;
   final bool modoMultiplayer;
   final int jogadorAtual;
 
   const TelaJogo({
     super.key,
-    required this.categoria,
+    required this.categorias,
+    required this.modoJogo,
     required this.modoMultiplayer,
     required this.jogadorAtual,
   });
@@ -53,8 +55,10 @@ class _TelaJogoState extends State<TelaJogo> {
   Future<void> _iniciarNovoJogo() async {
     setState(() => _carregando = true);
 
+    // Passamos a LISTA de categorias e o modoJogo para o Banco de Dados
     final palavra = await DatabaseHelper.instance.sortearPalavra(
-      categoria: widget.categoria,
+      categorias: widget.categorias,
+      modoJogo: widget.modoJogo,
     );
 
     if (!mounted) return;
@@ -69,7 +73,8 @@ class _TelaJogoState extends State<TelaJogo> {
       _letrasDescobertas = {};
       _letrasErradas = {};
       _erros = 0;
-      _dicaRevelada = false;
+      // Se for modo rodinhas, a dica já começa revelada automaticamente!
+      _dicaRevelada = (widget.modoJogo == 'rodinhas');
       _carregando = false;
       _animandoDesbloqueio = false;
     });
@@ -79,7 +84,6 @@ class _TelaJogoState extends State<TelaJogo> {
     if (_palavraAtual == null) return;
     final palavraReal = _palavraAtual!.texto.toUpperCase();
 
-    // 🎵 O SOM DO CLIQUE ENTRA EXATAMENTE AQUI!
     AudioManager.instance.playClique();
 
     setState(() {
@@ -225,9 +229,6 @@ class _TelaJogoState extends State<TelaJogo> {
     );
   }
 
-  // ============================================================
-  // NOVO POP-UP DE SAÍDA CUSTOMIZADO (Com o papel desenhado)
-  // ============================================================
   void _confirmarSaida() {
     showDialog(
       context: context,
@@ -267,8 +268,8 @@ class _TelaJogoState extends State<TelaJogo> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pop(context); // Fecha o dialog
-                      Navigator.pop(context); // Fecha a tela do jogo
+                      Navigator.pop(context);
+                      Navigator.pop(context);
                     },
                     child: const Text('Sair', style: TextStyle(color: AppTema.vermelho, fontWeight: FontWeight.w900, fontSize: 18)),
                   ),
@@ -315,7 +316,7 @@ class _TelaJogoState extends State<TelaJogo> {
                           if (widget.modoMultiplayer) _buildPlacar(),
                           if (widget.modoMultiplayer) const SizedBox(height: 4),
                           Text(
-                            widget.categoria,
+                            widget.categorias.length > 1 ? 'Modo Personalizado' : widget.categorias.first,
                             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTema.texto),
                           ),
                         ],
@@ -394,22 +395,15 @@ class _TelaJogoState extends State<TelaJogo> {
     );
   }
 
-  // ============================================================
-  // NOVO PLACAR MULTIPLAYER (Pontuações nas laterais)
-  // ============================================================
   Widget _buildPlacar() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Pontuação J1
         Text(
           'J1: $_vitoriasJ1',
           style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: AppTema.verde),
         ),
-
         const SizedBox(width: 16),
-
-        // Pílula Central
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
           decoration: BoxDecoration(
@@ -421,10 +415,7 @@ class _TelaJogoState extends State<TelaJogo> {
             style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 14),
           ),
         ),
-
         const SizedBox(width: 16),
-
-        // Pontuação J2
         Text(
           '$_vitoriasJ2 :J2',
           style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: AppTema.azul),
@@ -599,7 +590,6 @@ class _DialogResultado extends StatelessWidget {
     final titulo = vitoria ? 'Acertou!' : 'Game Over!';
     final corTitulo = vitoria ? AppTema.verde : AppTema.vermelho;
 
-    // NOVA REGRA DO BOTÃO: Se for multiplayer, carrega o botão azul de Continuar
     final String caminhoBotao;
     if (modoMultiplayer) {
       caminhoBotao = 'assets/images/btn_continuar.png';
