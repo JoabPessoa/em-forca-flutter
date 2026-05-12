@@ -65,6 +65,7 @@ class DatabaseHelper {
   Future<void> _popularBancoDados(Database db) async {
     final palavras = [
       // --- FILMES E SÉRIES ---
+      // 30 palavras
       {'texto': 'AVATAR', 'dica': 'Filme de ficção científica com criaturas azuis', 'categoria': 'Filmes e Séries', 'dificuldade': 'facil'},
       {'texto': 'VINGADORES', 'dica': 'Grupo de super-heróis da Marvel', 'categoria': 'Filmes e Séries', 'dificuldade': 'medio'},
       {'texto': 'MATRIX', 'dica': 'Filme onde a realidade é uma simulação', 'categoria': 'Filmes e Séries', 'dificuldade': 'facil'},
@@ -81,6 +82,20 @@ class DatabaseHelper {
       {'texto': 'BATMAN', 'dica': 'Herói sombrio de Gotham', 'categoria': 'Filmes e Séries', 'dificuldade': 'facil'},
       {'texto': 'CORINGA', 'dica': 'Vilão com sorriso assustador', 'categoria': 'Filmes e Séries', 'dificuldade': 'medio'},
       {'texto': 'THE FLASH', 'dica': 'Herói mais rápido do mundo', 'categoria': 'Filmes e Séries', 'dificuldade': 'facil'},
+      {'texto': 'SUPERMAN', 'dica': 'Herói conhecido por usar capa vermelha e voar', 'categoria': 'Filmes e Séries', 'dificuldade': 'facil'},
+      {'texto': 'WANDINHA', 'dica': 'Série sobre uma jovem sombria da Família Addams', 'categoria': 'Filmes e Séries', 'dificuldade': 'facil'},
+      {'texto': 'LUCIFER', 'dica': 'Série sobre o diabo vivendo em Los Angeles', 'categoria': 'Filmes e Séries', 'dificuldade': 'medio'},
+      {'texto': 'FRIENDS', 'dica': 'Série de comédia sobre seis amigos em Nova York', 'categoria': 'Filmes e Séries', 'dificuldade': 'facil'},
+      {'texto': 'LA CASA DE PAPEL', 'dica': 'Série espanhola sobre um grande assalto', 'categoria': 'Filmes e Séries', 'dificuldade': 'medio'},
+      {'texto': 'PEAKY BLINDERS', 'dica': 'Série sobre uma gangue britânica liderada por Thomas Shelby', 'categoria': 'Filmes e Séries', 'dificuldade': 'dificil'},
+      {'texto': 'ROUND SIX', 'dica': 'Série coreana com jogos mortais por dinheiro', 'categoria': 'Filmes e Séries', 'dificuldade': 'medio'},
+      {'texto': 'BARBIE', 'dica': 'Filme sobre a boneca mais famosa do mundo', 'categoria': 'Filmes e Séries', 'dificuldade': 'facil'},
+      {'texto': 'OPPENHEIMER', 'dica': 'Filme sobre o criador da bomba atômica', 'categoria': 'Filmes e Séries', 'dificuldade': 'dificil'},
+      {'texto': 'JURASSIC PARK', 'dica': 'Filme com um parque cheio de dinossauros', 'categoria': 'Filmes e Séries', 'dificuldade': 'medio'},
+      {'texto': 'STAR WARS', 'dica': 'Saga espacial com Jedi, Sith e sabres de luz', 'categoria': 'Filmes e Séries', 'dificuldade': 'medio'},
+      {'texto': 'SENHOR DOS ANEIS', 'dica': 'Saga de fantasia sobre um anel poderoso', 'categoria': 'Filmes e Séries', 'dificuldade': 'dificil'},
+      {'texto': 'THE LAST OF US', 'dica': 'Série baseada em jogo com infectados e sobreviventes', 'categoria': 'Filmes e Séries', 'dificuldade': 'medio'},
+      {'texto': 'CHAVES', 'dica': 'Série mexicana com personagens de uma vila', 'categoria': 'Filmes e Séries', 'dificuldade': 'facil'},
 
       // --- ESPORTES ---
       {'texto': 'FUTEBOL', 'dica': 'Esporte mais popular do Brasil', 'categoria': 'Esportes', 'dificuldade': 'facil'},
