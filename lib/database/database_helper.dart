@@ -98,6 +98,7 @@ class DatabaseHelper {
       {'texto': 'CHAVES', 'dica': 'Série mexicana com personagens de uma vila', 'categoria': 'Filmes e Séries', 'dificuldade': 'facil'},
 
       // --- ESPORTES ---
+      // 30 palavras
       {'texto': 'FUTEBOL', 'dica': 'Esporte mais popular do Brasil', 'categoria': 'Esportes', 'dificuldade': 'facil'},
       {'texto': 'BASQUETE', 'dica': 'Esporte com cesta e bola laranja', 'categoria': 'Esportes', 'dificuldade': 'medio'},
       {'texto': 'NATACAO', 'dica': 'Esporte praticado dentro da água', 'categoria': 'Esportes', 'dificuldade': 'medio'},
@@ -130,6 +131,7 @@ class DatabaseHelper {
       {'texto': 'TAEKWONDO', 'dica': 'Arte marcial coreana com muitos chutes', 'categoria': 'Esportes', 'dificuldade': 'dificil'},
 
       // --- TECNOLOGIA / PROGRAMAÇÃO ---
+      // 30 palavras
       {'texto': 'ALGORITMO', 'dica': 'Sequência de passos para resolver um problema', 'categoria': 'Tecnologia', 'dificuldade': 'dificil'},
       {'texto': 'FLUTTER', 'dica': 'Framework Google para criar apps mobile', 'categoria': 'Tecnologia', 'dificuldade': 'medio'},
       {'texto': 'PYTHON', 'dica': 'Linguagem de programação com nome de cobra', 'categoria': 'Tecnologia', 'dificuldade': 'facil'},
@@ -162,6 +164,7 @@ class DatabaseHelper {
       {'texto': 'CLOUD COMPUTING', 'dica': 'Uso de serviços e armazenamento pela internet', 'categoria': 'Tecnologia', 'dificuldade': 'dificil'},
 
       // --- COMIDAS E BEBIDAS ---
+      // 30 palavras
       {'texto': 'PIZZA', 'dica': 'Prato italiano redondo com queijo', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'facil'},
       {'texto': 'BRIGADEIRO', 'dica': 'Docinho brasileiro de chocolate', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'dificil'},
       {'texto': 'SUSHI', 'dica': 'Prato japonês com arroz e peixe cru', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'facil'},
@@ -194,6 +197,7 @@ class DatabaseHelper {
       {'texto': 'MILK SHAKE', 'dica': 'Bebida gelada feita com leite e sorvete', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'medio'},
 
       // --- MÚSICA ---
+      // 30 palavras
       {'texto': 'GUITARRA', 'dica': 'Instrumento elétrico de cordas', 'categoria': 'Música', 'dificuldade': 'medio'},
       {'texto': 'BEETHOVEN', 'dica': 'Compositor clássico alemão que ficou surdo', 'categoria': 'Música', 'dificuldade': 'dificil'},
       {'texto': 'SAMBA', 'dica': 'Ritmo musical típico do Brasil', 'categoria': 'Música', 'dificuldade': 'facil'},
@@ -226,6 +230,7 @@ class DatabaseHelper {
       {'texto': 'MPB', 'dica': 'Sigla para Música Popular Brasileira', 'categoria': 'Música', 'dificuldade': 'facil'},
       
       // --- MÚSICA - CANTORES ---
+      // 25 palavras
       {'texto': 'MICHAEL JACKSON', 'dica': 'Artista conhecido como uma das maiores figuras do pop mundial', 'categoria': 'Música - Cantores', 'dificuldade': 'facil'},
       {'texto': 'ELVIS PRESLEY', 'dica': 'Artista histórico muito associado ao rock and roll', 'categoria': 'Música - Cantores', 'dificuldade': 'medio'},
       {'texto': 'BEYONCE', 'dica': 'Artista internacional conhecida por grandes apresentações e voz potente', 'categoria': 'Música - Cantores', 'dificuldade': 'medio'},
@@ -251,6 +256,39 @@ class DatabaseHelper {
       {'texto': 'ALOK', 'dica': 'Artista brasileiro ligado à música eletrônica', 'categoria': 'Música - Cantores', 'dificuldade': 'dificil'},
       {'texto': 'LUDMILLA', 'dica': 'Artista brasileira que transita entre funk, pop e pagode', 'categoria': 'Música - Cantores', 'dificuldade': 'dificil'},
       {'texto': 'CAETANO VELOSO', 'dica': 'Artista brasileiro ligado à MPB e ao tropicalismo', 'categoria': 'Música - Cantores', 'dificuldade': 'dificil'},
+
+      // --- ANIMAIS ---
+      // 30 palavras
+      {'texto': 'CACHORRO', 'dica': 'Animal doméstico conhecido por sua lealdade', 'categoria': 'Animais', 'dificuldade': 'facil'},
+      {'texto': 'GATO', 'dica': 'Animal doméstico conhecido por ser independente', 'categoria': 'Animais', 'dificuldade': 'facil'},
+      {'texto': 'ELEFANTE', 'dica': 'Animal grande conhecido por sua tromba', 'categoria': 'Animais', 'dificuldade': 'facil'},
+      {'texto': 'LEAO', 'dica': 'Felino conhecido como rei da selva', 'categoria': 'Animais', 'dificuldade': 'facil'},
+      {'texto': 'TIGRE', 'dica': 'Felino listrado encontrado principalmente na Ásia', 'categoria': 'Animais', 'dificuldade': 'facil'},
+      {'texto': 'MACACO', 'dica': 'Animal ágil que vive em árvores', 'categoria': 'Animais', 'dificuldade': 'facil'},
+      {'texto': 'CAVALO', 'dica': 'Animal usado historicamente para transporte', 'categoria': 'Animais', 'dificuldade': 'facil'},
+      {'texto': 'COELHO', 'dica': 'Animal pequeno conhecido por suas orelhas grandes', 'categoria': 'Animais', 'dificuldade': 'facil'},
+      {'texto': 'GIRAFA', 'dica': 'Animal conhecido por seu pescoço comprido', 'categoria': 'Animais', 'dificuldade': 'facil'},
+      {'texto': 'TUBARAO', 'dica': 'Animal marinho conhecido por seus dentes afiados', 'categoria': 'Animais', 'dificuldade': 'medio'},
+      {'texto': 'JACARE', 'dica': 'Réptil encontrado em rios e áreas alagadas', 'categoria': 'Animais', 'dificuldade': 'medio'},
+      {'texto': 'CANGURU', 'dica': 'Animal que se locomove saltando', 'categoria': 'Animais', 'dificuldade': 'medio'},
+      {'texto': 'PINGUIM', 'dica': 'Ave que não voa e vive em regiões frias', 'categoria': 'Animais', 'dificuldade': 'medio'},
+      {'texto': 'CORUJA', 'dica': 'Ave associada à noite e à visão aguçada', 'categoria': 'Animais', 'dificuldade': 'medio'},
+      {'texto': 'GOLFINHO', 'dica': 'Animal marinho conhecido por sua inteligência', 'categoria': 'Animais', 'dificuldade': 'medio'},
+      {'texto': 'BALEIA', 'dica': 'Grande animal marinho mamífero', 'categoria': 'Animais', 'dificuldade': 'medio'},
+      {'texto': 'RAPOSA', 'dica': 'Animal conhecido por sua esperteza', 'categoria': 'Animais', 'dificuldade': 'medio'},
+      {'texto': 'CAMELO', 'dica': 'Animal adaptado a regiões desérticas', 'categoria': 'Animais', 'dificuldade': 'medio'},
+      {'texto': 'PAVAO', 'dica': 'Ave conhecida por sua cauda colorida', 'categoria': 'Animais', 'dificuldade': 'medio'},
+      {'texto': 'ARARA', 'dica': 'Ave colorida comum em regiões tropicais', 'categoria': 'Animais', 'dificuldade': 'medio'},
+      {'texto': 'ORNITORRINCO', 'dica': 'Animal incomum que bota ovos e é mamífero', 'categoria': 'Animais', 'dificuldade': 'dificil'},
+      {'texto': 'CAMALEAO', 'dica': 'Réptil conhecido por mudar de cor', 'categoria': 'Animais', 'dificuldade': 'dificil'},
+      {'texto': 'TATU BOLA', 'dica': 'Animal que pode se enrolar para se proteger', 'categoria': 'Animais', 'dificuldade': 'dificil'},
+      {'texto': 'LOBO GUARÁ', 'dica': 'Canídeo típico do cerrado brasileiro', 'categoria': 'Animais', 'dificuldade': 'dificil'},
+      {'texto': 'CAPIVARA', 'dica': 'Maior roedor do mundo, comum no Brasil', 'categoria': 'Animais', 'dificuldade': 'dificil'},
+      {'texto': 'AXOLOTE', 'dica': 'Animal aquático conhecido por sua capacidade de regeneração', 'categoria': 'Animais', 'dificuldade': 'dificil'},
+      {'texto': 'SURICATO', 'dica': 'Pequeno mamífero que costuma viver em grupos', 'categoria': 'Animais', 'dificuldade': 'dificil'},
+      {'texto': 'QUATI', 'dica': 'Mamífero de focinho alongado encontrado nas Américas', 'categoria': 'Animais', 'dificuldade': 'dificil'},
+      {'texto': 'BICHO PREGUICA', 'dica': 'Animal conhecido por se mover lentamente', 'categoria': 'Animais', 'dificuldade': 'dificil'},
+      {'texto': 'TAMANDUA', 'dica': 'Animal que se alimenta principalmente de formigas', 'categoria': 'Animais', 'dificuldade': 'dificil'},
     ];
 
     for (final p in palavras) {
