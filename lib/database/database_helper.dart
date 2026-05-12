@@ -116,6 +116,18 @@ class DatabaseHelper {
       {'texto': 'ESCALADA', 'dica': 'Subir paredes ou montanhas', 'categoria': 'Esportes', 'dificuldade': 'medio'},
       {'texto': 'GINASTICA', 'dica': 'Esporte com movimentos acrobáticos', 'categoria': 'Esportes', 'dificuldade': 'medio'},
       {'texto': 'MARATONA', 'dica': 'Corrida de longa distância', 'categoria': 'Esportes', 'dificuldade': 'medio'},
+      {'texto': 'AUTOMOBILISMO', 'dica': 'Esporte de corrida com carros em alta velocidade', 'categoria': 'Esportes', 'dificuldade': 'dificil'},
+      {'texto': 'FORMULA UM', 'dica': 'Categoria famosa de corrida automobilística', 'categoria': 'Esportes', 'dificuldade': 'medio'},
+      {'texto': 'BADMINTON', 'dica': 'Esporte com raquete e peteca', 'categoria': 'Esportes', 'dificuldade': 'dificil'},
+      {'texto': 'RUGBY', 'dica': 'Esporte coletivo com bola oval', 'categoria': 'Esportes', 'dificuldade': 'medio'},
+      {'texto': 'BEISEBOL', 'dica': 'Esporte com taco, bola e bases', 'categoria': 'Esportes', 'dificuldade': 'medio'},
+      {'texto': 'GOLFE', 'dica': 'Esporte em que se tenta acertar a bola em buracos no campo', 'categoria': 'Esportes', 'dificuldade': 'medio'},
+      {'texto': 'PING PONG', 'dica': 'Esporte de mesa jogado com pequenas raquetes', 'categoria': 'Esportes', 'dificuldade': 'facil'},
+      {'texto': 'ARCO E FLECHA', 'dica': 'Esporte de precisão usando arco', 'categoria': 'Esportes', 'dificuldade': 'medio'},
+      {'texto': 'ESGRIMA', 'dica': 'Esporte de combate com espada', 'categoria': 'Esportes', 'dificuldade': 'dificil'},
+      {'texto': 'HIPISMO', 'dica': 'Esporte praticado com cavalos', 'categoria': 'Esportes', 'dificuldade': 'medio'},
+      {'texto': 'MUSCULACAO', 'dica': 'Atividade física com pesos e aparelhos', 'categoria': 'Esportes', 'dificuldade': 'facil'},
+      {'texto': 'TAEKWONDO', 'dica': 'Arte marcial coreana com muitos chutes', 'categoria': 'Esportes', 'dificuldade': 'dificil'},
 
       // --- TECNOLOGIA / PROGRAMAÇÃO ---
       {'texto': 'ALGORITMO', 'dica': 'Sequência de passos para resolver um problema', 'categoria': 'Tecnologia', 'dificuldade': 'dificil'},
