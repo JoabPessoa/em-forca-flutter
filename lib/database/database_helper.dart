@@ -148,6 +148,18 @@ class DatabaseHelper {
       {'texto': 'LINUX', 'dica': 'Sistema operacional de código aberto', 'categoria': 'Tecnologia', 'dificuldade': 'facil'},
       {'texto': 'WINDOWS', 'dica': 'Sistema operacional da Microsoft', 'categoria': 'Tecnologia', 'dificuldade': 'facil'},
       {'texto': 'ANDROID', 'dica': 'Sistema operacional mobile do Google', 'categoria': 'Tecnologia', 'dificuldade': 'facil'},
+      {'texto': 'COMPUTADOR', 'dica': 'Máquina usada para processar informações', 'categoria': 'Tecnologia', 'dificuldade': 'facil'},
+      {'texto': 'NOTEBOOK', 'dica': 'Computador portátil muito usado para estudar e trabalhar', 'categoria': 'Tecnologia', 'dificuldade': 'facil'},
+      {'texto': 'PROCESSADOR', 'dica': 'Peça responsável por executar instruções no computador', 'categoria': 'Tecnologia', 'dificuldade': 'medio'},
+      {'texto': 'MEMORIA RAM', 'dica': 'Memória temporária usada pelo computador', 'categoria': 'Tecnologia', 'dificuldade': 'medio'},
+      {'texto': 'PLACA MAE', 'dica': 'Componente onde outras peças do computador são conectadas', 'categoria': 'Tecnologia', 'dificuldade': 'medio'},
+      {'texto': 'ROTEADOR', 'dica': 'Aparelho usado para distribuir internet', 'categoria': 'Tecnologia', 'dificuldade': 'facil'},
+      {'texto': 'WI FI', 'dica': 'Tecnologia de conexão sem fio à internet', 'categoria': 'Tecnologia', 'dificuldade': 'facil'},
+      {'texto': 'BLUETOOTH', 'dica': 'Tecnologia sem fio usada para conectar dispositivos próximos', 'categoria': 'Tecnologia', 'dificuldade': 'medio'},
+      {'texto': 'CIBERSEGURANCA', 'dica': 'Área que protege sistemas contra ataques digitais', 'categoria': 'Tecnologia', 'dificuldade': 'dificil'},
+      {'texto': 'CRIPTOGRAFIA', 'dica': 'Técnica usada para proteger informações', 'categoria': 'Tecnologia', 'dificuldade': 'dificil'},
+      {'texto': 'SERVIDOR', 'dica': 'Computador ou sistema que fornece serviços em rede', 'categoria': 'Tecnologia', 'dificuldade': 'medio'},
+      {'texto': 'CLOUD COMPUTING', 'dica': 'Uso de serviços e armazenamento pela internet', 'categoria': 'Tecnologia', 'dificuldade': 'dificil'},
 
       // --- COMIDAS E BEBIDAS ---
       {'texto': 'PIZZA', 'dica': 'Prato italiano redondo com queijo', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'facil'},
