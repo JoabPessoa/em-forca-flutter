@@ -11,7 +11,7 @@ class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
   static Database? _database;
 
-  // LISTA MÁGICA: Guarda os IDs das palavras que já saíram!
+  //Guarda os IDs das palavras que já saíram!
   List<int> _palavrasJogadasId = [];
 
   DatabaseHelper._init();
@@ -28,7 +28,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 3,
+      version: 4,
       onCreate: _criarTabelas,
       onUpgrade: (db, oldVersion, newVersion) async {
         // MUDANÇA 2: Se a versão aumentar, apaga o banco velho e cria o novo com as palavras atualizadas
@@ -289,6 +289,37 @@ class DatabaseHelper {
       {'texto': 'QUATI', 'dica': 'Mamífero de focinho alongado encontrado nas Américas', 'categoria': 'Animais', 'dificuldade': 'dificil'},
       {'texto': 'BICHO PREGUICA', 'dica': 'Animal conhecido por se mover lentamente', 'categoria': 'Animais', 'dificuldade': 'dificil'},
       {'texto': 'TAMANDUA', 'dica': 'Animal que se alimenta principalmente de formigas', 'categoria': 'Animais', 'dificuldade': 'dificil'},
+
+      // --- PERSONAGENS
+        {'texto': 'DRACULA', 'dica': 'O mais famoso vampiro da literatura, residente da Transilvânia', 'categoria': 'Personagens', 'dificuldade': 'facil'},
+        {'texto': 'SHERLOCK HOLMES', 'dica': 'Detetive britânico conhecido por sua lógica e o endereço 221B Baker Street', 'categoria': 'Personagens', 'dificuldade': 'facil'},
+        {'texto': 'ROBIN HOOD', 'dica': 'Herói mítico que roubava dos ricos para dar aos pobres', 'categoria': 'Personagens', 'dificuldade': 'facil'},
+        {'texto': 'FRANKENSTEIN', 'dica': 'Monstro criado em laboratório a partir de partes humanas por um cientista', 'categoria': 'Personagens', 'dificuldade': 'facil'},
+        {'texto': 'TARZAN', 'dica': 'Homem criado por macacos em uma famosa história de selva', 'categoria': 'Personagens', 'dificuldade': 'facil'},
+        {'texto': 'HERCULES', 'dica': 'Herói da mitologia grega conhecido por sua força monumental e doze trabalhos', 'categoria': 'Personagens', 'dificuldade': 'facil'},
+        {'texto': 'PETER PAN', 'dica': 'O garoto que se recusava a crescer e vivia na Terra do Nunca', 'categoria': 'Personagens', 'dificuldade': 'facil'},
+        {'texto': 'PINOQUIO', 'dica': 'Boneco de madeira cujo nariz crescia quando contava mentiras', 'categoria': 'Personagens', 'dificuldade': 'facil'},
+        {'texto': 'CINDERELA', 'dica': 'Personagem dos contos de fadas que perde sapatinho de cristal no baile', 'categoria': 'Personagens', 'dificuldade': 'facil'},
+        {'texto': 'ZEUS', 'dica': 'O deus dos deuses e senhor dos raios na mitologia grega', 'categoria': 'Personagens', 'dificuldade': 'medio'},
+        {'texto': 'MEDUSA', 'dica': 'Criatura mitológica com serpentes na cabeça que transformava pessoas em pedra', 'categoria': 'Personagens', 'dificuldade': 'medio'},
+        {'texto': 'REI ARTUR', 'dica': 'Lendário líder britânico que empunhou a espada Excalibur', 'categoria': 'Personagens', 'dificuldade': 'medio'},
+        {'texto': 'ALADIM', 'dica': 'Jovem que encontrou um gênio dentro de uma lâmpada mágica', 'categoria': 'Personagens', 'dificuldade': 'medio'},
+        {'texto': 'DREI MARRECO', 'dica': 'O nobre marinheiro do livro clássico de aventuras Náuticas de Simbad', 'categoria': 'Personagens', 'dificuldade': 'medio'},
+        {'texto': 'MERLIN', 'dica': 'O mago mais famoso das lendas arthurianas', 'categoria': 'Personagens', 'dificuldade': 'medio'},
+        {'texto': 'ZORRO', 'dica': 'Herói mascarado que defende os pobres e deixa a marca da letra Z com sua espada', 'categoria': 'Personagens', 'dificuldade': 'medio'},
+        {'texto': 'QUASIMODO', 'dica': 'O famoso e leal corcunda que habitava a catedral de Notre-Dame', 'categoria': 'Personagens', 'dificuldade': 'medio'},
+        {'texto': 'PHANTOM', 'dica': 'O misterioso gênio musical que assombrava os bastidores da Ópera de Paris', 'categoria': 'Personagens', 'dificuldade': 'medio'},
+        {'texto': 'LANCELOT', 'dica': 'O mais famoso e habilidoso cavaleiro da Távola Redonda', 'categoria': 'Personagens', 'dificuldade': 'medio'},
+        {'texto': 'CONDE DE MONTE CRISTO', 'dica': 'Homem que busca vingança após ser injustamente preso no clássico de Alexandre Dumas', 'categoria': 'Personagens', 'dificuldade': 'dificil'},
+        {'texto': 'DON QUIXOTE', 'dica': 'Cavaleiro sonhador da literatura que lutava contra moinhos de vento', 'categoria': 'Personagens', 'dificuldade': 'dificil'},
+        {'texto': 'CAPITAO NEMO', 'dica': 'O misterioso comandante do submarino Nautilus no livro de Júlio Verne', 'categoria': 'Personagens', 'dificuldade': 'dificil'},
+        {'texto': 'DORIAN GRAY', 'dica': 'Jovem cujo retrato envelhecia e sofria marcas em seu lugar no livro de Oscar Wilde', 'categoria': 'Personagens', 'dificuldade': 'dificil'},
+        {'texto': 'MICKY ROBINSON', 'dica': 'O náufrago mais famoso da literatura clássica que sobreviveu em uma ilha deserta', 'categoria': 'Personagens', 'dificuldade': 'dificil'},
+        {'texto': 'DR JEKYLL', 'dica': 'Médico clássico que criou uma poção e se transformava no terrível Monstro Mr. Hyde', 'categoria': 'Personagens', 'dificuldade': 'dificil'},
+        {'texto': 'ACHILLES', 'dica': 'Guerreiro lendário da Guerra de Troia cujo único ponto fraco era o calcanhar', 'categoria': 'Personagens', 'dificuldade': 'dificil'},
+        {'texto': 'ODYSSEUS', 'dica': 'Herói grego que levou dez anos para retornar para casa após a queda de Troia', 'categoria': 'Personagens', 'dificuldade': 'dificil'},
+        {'texto': 'ICARO', 'dica': 'Personagem mitológico que voou muito perto do sol e teve suas asas de cera derretidas', 'categoria': 'Personagens', 'dificuldade': 'dificil'},
+        {'texto': 'MINOTAURO', 'dica': 'Criatura com corpo de homem e cabeça de touro presa no labirinto de Creta', 'categoria': 'Personagens', 'dificuldade': 'facil'},
     ];
 
     for (final p in palavras) {
