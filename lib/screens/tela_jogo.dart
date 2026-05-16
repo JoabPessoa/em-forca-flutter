@@ -55,7 +55,6 @@ class _TelaJogoState extends State<TelaJogo> {
   Future<void> _iniciarNovoJogo() async {
     setState(() => _carregando = true);
 
-    // Passamos a LISTA de categorias e o modoJogo para o Banco de Dados
     final palavra = await DatabaseHelper.instance.sortearPalavra(
       categorias: widget.categorias,
       modoJogo: widget.modoJogo,
@@ -73,7 +72,6 @@ class _TelaJogoState extends State<TelaJogo> {
       _letrasDescobertas = {};
       _letrasErradas = {};
       _erros = 0;
-      // Se for modo rodinhas, a dica já começa revelada automaticamente!
       _dicaRevelada = (widget.modoJogo == 'rodinhas');
       _carregando = false;
       _animandoDesbloqueio = false;
@@ -268,6 +266,7 @@ class _TelaJogoState extends State<TelaJogo> {
                   ),
                   GestureDetector(
                     onTap: () {
+                      AudioManager.instance.playMusica('musica_menu.mp3');
                       Navigator.pop(context);
                       Navigator.pop(context);
                     },

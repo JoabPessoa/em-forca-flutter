@@ -30,6 +30,20 @@ class AudioManager with WidgetsBindingObserver {
   }
 
   Future<void> init() async {
+    // --- CORREÇÃO DO SPOTIFY/MÚSICA EM SEGUNDO PLANO ---
+    final audioContext = AudioContext(
+      iOS: AudioContextIOS(
+        category: AVAudioSessionCategory.ambient, // "Ambient" permite misturar sons no iOS
+        options: [
+          AVAudioSessionOptions.mixWithOthers,
+        ],
+      ),
+      android: AudioContextAndroid(
+        audioFocus: AndroidAudioFocus.none, // Não pede foco exclusivo de áudio no Android
+      ),
+    );
+    await AudioPlayer.global.setAudioContext(audioContext);
+
     // Faz a música de fundo repetir infinitamente
     _bgmPlayer.setReleaseMode(ReleaseMode.loop);
   }
