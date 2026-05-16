@@ -2,61 +2,61 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/widgets.dart';
 
 class AudioManager with WidgetsBindingObserver {
-  // Padrão Singleton para existir apenas uma instância de áudio rodando
+  // Padrão Singleton para existir apenas uma instância de áudio a correr
   static final AudioManager instance = AudioManager._init();
 
-  final AudioPlayer _bgmPlayer = AudioPlayer();
-  final AudioPlayer _sfxPlayer = AudioPlayer();
+  // O 'late' garante que estes players só são criados quando nós quisermos!
+  late final AudioPlayer _bgmPlayer;
+  late final AudioPlayer _sfxPlayer;
 
   double volumeMusica = 0.5;
   double volumeEfeitos = 1.0;
 
   // Construtor privado
   AudioManager._init() {
-    // 1. Avisa ao Flutter para avisar o AudioManager quando o app minimizar/voltar
     WidgetsBinding.instance.addObserver(this);
   }
 
-  // 2. Função mágica que é chamada automaticamente pelo sistema do celular
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
-      // O usuário minimizou o app, abriu a multitarefa ou recebeu uma ligação
       _bgmPlayer.pause();
     } else if (state == AppLifecycleState.resumed) {
-      // O usuário voltou para o jogo!
       _bgmPlayer.resume();
     }
   }
 
   Future<void> init() async {
-    // --- CORREÇÃO DO SPOTIFY/MÚSICA EM SEGUNDO PLANO ---
+    // 1. PRIMEIRO: Aplicamos a regra global para não interromper outras aplicações (Spotify)
     final audioContext = AudioContext(
       iOS: AudioContextIOS(
-        category: AVAudioSessionCategory.ambient, // "Ambient" permite misturar sons no iOS
+        category: AVAudioSessionCategory.ambient,
         options: [
           AVAudioSessionOptions.mixWithOthers,
         ],
       ),
       android: AudioContextAndroid(
-        audioFocus: AndroidAudioFocus.none, // Não pede foco exclusivo de áudio no Android
+        audioFocus: AndroidAudioFocus.none,
       ),
     );
     await AudioPlayer.global.setAudioContext(audioContext);
+
+    // 2. SEGUNDO: Agora sim, criamos os reprodutores com as regras já em vigor
+    _bgmPlayer = AudioPlayer();
+    _sfxPlayer = AudioPlayer();
 
     // Faz a música de fundo repetir infinitamente
     _bgmPlayer.setReleaseMode(ReleaseMode.loop);
   }
 
   Future<void> playMusica(String nomeArquivo) async {
-    await _bgmPlayer.stop(); // Para a música atual antes de tocar a nova
+    await _bgmPlayer.stop();
     await _bgmPlayer.setVolume(volumeMusica);
     await _bgmPlayer.play(AssetSource('audio/$nomeArquivo'));
   }
 
   Future<void> playClique() async {
     await _sfxPlayer.setVolume(volumeEfeitos);
-    // Tocar o efeito não interrompe a música de fundo
     await _sfxPlayer.play(AssetSource('audio/clique.mp3'));
   }
 
