@@ -384,7 +384,7 @@ class DatabaseHelper {
         break;
       case 'dificil':
       default:
-        ordemDificuldade = "1";
+        ordemDificuldade = "CASE WHEN dificuldade = 'dificil' THEN 1 WHEN dificuldade = 'medio' THEN 2 ELSE 3 END";
         break;
     }
 
