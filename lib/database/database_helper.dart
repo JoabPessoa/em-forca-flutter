@@ -382,6 +382,37 @@ class DatabaseHelper {
       {'texto': 'MALDIVAS', 'dica': 'País insular no Oceano Índico famoso por seus resorts de luxo sobre a água', 'categoria': 'Paises', 'dificuldade': 'dificil'},
       {'texto': 'MÔNACO', 'dica': 'O segundo menor país do mundo, famoso pelo Grande Prêmio de Fórmula 1', 'categoria': 'Paises', 'dificuldade': 'dificil'},
 
+      {'texto': 'BRASIL', 'dica': 'O único país pentacampeão mundial de futebol e maior da América Latina', 'categoria': 'Paises', 'dificuldade': 'facil'},
+      {'texto': 'JAPAO', 'dica': 'Arquipélago asiático conhecido como a Terra do Sol Nascente', 'categoria': 'Paises', 'dificuldade': 'facil'},
+      {'texto': 'FRANCA', 'dica': 'Nação europeia famosa pela Torre Eiffel e pela gastronomia refinada', 'categoria': 'Paises', 'dificuldade': 'facil'},
+      {'texto': 'EGITO', 'dica': 'País africano conhecido por suas pirâmides milenares e pelo Rio Nilo', 'categoria': 'Paises', 'dificuldade': 'facil'},
+      {'texto': 'ITALIA', 'dica': 'País europeu com formato de bota, berço do Império Romano', 'categoria': 'Paises', 'dificuldade': 'facil'},
+      {'texto': 'CHINA', 'dica': 'O país mais populoso do mundo, famoso por sua Grande Muralha', 'categoria': 'Paises', 'dificuldade': 'facil'},
+      {'texto': 'ARGENTINA', 'dica': 'País sul-americano conhecido pelo tango e por ser o berço de Messi', 'categoria': 'Paises', 'dificuldade': 'facil'},
+      {'texto': 'CANADA', 'dica': 'O segundo maior país em extensão territorial, representado pela folha de bordo', 'categoria': 'Paises', 'dificuldade': 'facil'},
+      {'texto': 'MEXICO', 'dica': 'País da América do Norte famoso pelos seus tacos e civilizações astecas', 'categoria': 'Paises', 'dificuldade': 'facil'},
+
+      {'texto': 'AUSTRALIA', 'dica': 'País continental famoso por seus cangurus e pela Grande Barreira de Corais', 'categoria': 'Paises', 'dificuldade': 'medio'},
+      {'texto': 'TURQUIA', 'dica': 'Nação que une a Europa e a Ásia, famosa pela cidade de Istambul', 'categoria': 'Paises', 'dificuldade': 'medio'},
+      {'texto': 'NORUEGA', 'dica': 'País escandinavo conhecido por seus fiordes e pela Aurora Boreal', 'categoria': 'Paises', 'dificuldade': 'medio'},
+      {'texto': 'GRECIA', 'dica': 'Berço da democracia e da filosofia, composto por milhares de ilhas', 'categoria': 'Paises', 'dificuldade': 'medio'},
+      {'texto': 'INDIA', 'dica': 'País asiático com cultura milenar e o famoso monumento Taj Mahal', 'categoria': 'Paises', 'dificuldade': 'medio'},
+      {'texto': 'TAILANDIA', 'dica': 'Nação do sudeste asiático famosa por seus templos budistas e praias paradisíacas', 'categoria': 'Paises', 'dificuldade': 'medio'},
+      {'texto': 'PORTUGAL', 'dica': 'País europeu famoso pelo fado, pelo bacalhau e por sua história de navegação', 'categoria': 'Paises', 'dificuldade': 'medio'},
+      {'texto': 'CHILE', 'dica': 'País longo e estreito na América do Sul, lar da Cordilheira dos Andes', 'categoria': 'Paises', 'dificuldade': 'medio'},
+      {'texto': 'SUECIA', 'dica': 'País nórdico conhecido por marcas como Volvo, IKEA e a banda ABBA', 'categoria': 'Paises', 'dificuldade': 'medio'},
+      {'texto': 'EGITO', 'dica': 'País africano que abriga a única das Sete Maravilhas do Mundo Antigo que resta', 'categoria': 'Paises', 'dificuldade': 'medio'},
+
+      {'texto': 'MADAGASCAR', 'dica': 'Grande ilha africana no Oceano Índico com fauna e flora únicas', 'categoria': 'Paises', 'dificuldade': 'dificil'},
+      {'texto': 'LUXEMBURGO', 'dica': 'Um dos menores países da Europa, situado entre a Bélgica, França e Alemanha', 'categoria': 'Paises', 'dificuldade': 'dificil'},
+      {'texto': 'INDONESIA', 'dica': 'O maior arquipélago do mundo, composto por mais de 17 mil ilhas', 'categoria': 'Paises', 'dificuldade': 'dificil'},
+      {'texto': 'QUENIA', 'dica': 'País da África Oriental famoso por suas reservas de safári e maratonistas', 'categoria': 'Paises', 'dificuldade': 'dificil'},
+      {'texto': 'FILIPINAS', 'dica': 'País insular no sudeste asiático que foi colônia da Espanha e dos EUA', 'categoria': 'Paises', 'dificuldade': 'dificil'},
+      {'texto': 'SURINAME', 'dica': 'País vizinho ao Brasil que tem o holandês como língua oficial', 'categoria': 'Paises', 'dificuldade': 'dificil'},
+      {'texto': 'CAZAQUISTAO', 'dica': 'O maior país do mundo sem costa marítima, localizado na Ásia Central', 'categoria': 'Paises', 'dificuldade': 'dificil'},
+      {'texto': 'BUTAO', 'dica': 'Reino no Himalaia conhecido por medir o Índice de Felicidade Interna Bruta', 'categoria': 'Paises', 'dificuldade': 'dificil'},
+      {'texto': 'FINLANDIA', 'dica': 'País europeu frequentemente eleito o mais feliz do mundo e lar do Papai Noel', 'categoria': 'Paises', 'dificuldade': 'dificil'},
+      {'texto': 'UZBEQUISTAO', 'dica': 'País da Ásia Central famoso por sua arquitetura de mesquitas na Rota da Seda', 'categoria': 'Paises', 'dificuldade': 'dificil'},
     ];
 
     for (final p in palavras) {
