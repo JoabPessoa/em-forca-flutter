@@ -348,6 +348,40 @@ class DatabaseHelper {
         {'texto': 'ROUPA NOVA DO REI', 'dica': 'Fabula sobre um alfaiate trapaceiro que vende um traje invisivel para um monarca vaidoso', 'categoria': 'Contos de Fada', 'dificuldade': 'dificil'},
         {'texto': 'OS TRES PORQUINHOS', 'dica': 'Irmãos construtores que testam a resistencia de suas casas contra o sopro do lobo', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
         {'texto': 'A PEQUENA SEREIA', 'dica': 'Criatura dos oceanos que troca sua propria voz com uma bruxa para ter pernas humanas', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
+
+      // -- Paises
+      {'texto': 'ALEMANHA', 'dica': 'Nação europeia famosa pela Oktoberfest e pela fabricação de carros de luxo', 'categoria': 'Paises', 'dificuldade': 'facil'},
+      {'texto': 'ESPANHA', 'dica': 'País europeu conhecido pelas touradas, pelo flamenco e pela paella', 'categoria': 'Paises', 'dificuldade': 'facil'},
+      {'texto': 'ESTADOS UNIDOS', 'dica': 'Potência mundial da América do Norte onde fica a cidade de Nova York', 'categoria': 'Paises', 'dificuldade': 'facil'},
+      {'texto': 'RUSSIA', 'dica': 'O maior país do mundo em extensão territorial, localizado entre Europa e Ásia', 'categoria': 'Paises', 'dificuldade': 'facil'},
+      {'texto': 'PERU', 'dica': 'País sul-americano que abriga as ruínas históricas de Machu Picchu', 'categoria': 'Paises', 'dificuldade': 'facil'},
+      {'texto': 'SUIÇA', 'dica': 'País europeu famoso por seus relógios, chocolates e pelos Alpes', 'categoria': 'Paises', 'dificuldade': 'facil'},
+      {'texto': 'INGLATERRA', 'dica': 'Nação do Reino Unido conhecida pela monarquia e pelo relógio Big Ben', 'categoria': 'Paises', 'dificuldade': 'facil'},
+      {'texto': 'COLOMBIA', 'dica': 'País sul-americano famoso pela exportação de café e pelas esmeraldas', 'categoria': 'Paises', 'dificuldade': 'facil'},
+      {'texto': 'COREIA DO SUL', 'dica': 'Nação asiática famosa pela tecnologia e pelo fenômeno cultural do K-pop', 'categoria': 'Paises', 'dificuldade': 'facil'},
+
+      {'texto': 'MARROCOS', 'dica': 'País africano famoso por seus desertos, mercados e a cidade de Marraquexe', 'categoria': 'Paises', 'dificuldade': 'medio'},
+      {'texto': 'IRA', 'dica': 'País do Oriente Médio antigo berço do Império Persa', 'categoria': 'Paises', 'dificuldade': 'medio'},
+      {'texto': 'VIETNA', 'dica': 'País do sudeste asiático conhecido por suas baías de águas verdes e história de guerra', 'categoria': 'Paises', 'dificuldade': 'medio'},
+      {'texto': 'AFRICA DO SUL', 'dica': 'Nação que sediou a Copa de 2010 e foi lar de Nelson Mandela', 'categoria': 'Paises', 'dificuldade': 'medio'},
+      {'texto': 'HOLANDA', 'dica': 'País europeu famoso pelos moinhos de vento, tulipas e canais de Amsterdã', 'categoria': 'Paises', 'dificuldade': 'medio'},
+      {'texto': 'ISLANDIA', 'dica': 'País insular nórdico conhecido como a terra do gelo e do fogo', 'categoria': 'Paises', 'dificuldade': 'medio'},
+      {'texto': 'PARAGUAI', 'dica': 'País vizinho ao Brasil que não possui saída para o mar', 'categoria': 'Paises', 'dificuldade': 'medio'},
+      {'texto': 'AUSTRIA', 'dica': 'País europeu onde nasceu Mozart e famoso por sua música clássica', 'categoria': 'Paises', 'dificuldade': 'medio'},
+      {'texto': 'CUBA', 'dica': 'Ilha caribenha famosa por seus carros antigos e charutos feitos à mão', 'categoria': 'Paises', 'dificuldade': 'medio'},
+      {'texto': 'POLONIA', 'dica': 'País europeu onde viveu o Papa João Paulo II e o pianista Chopin', 'categoria': 'Paises', 'dificuldade': 'medio'},
+
+      {'texto': 'NOVA ZELANDIA', 'dica': 'País da Oceania onde foram filmadas as trilogias de O Senhor dos Anéis', 'categoria': 'Paises', 'dificuldade': 'dificil'},
+      {'texto': 'SINGAPURA', 'dica': 'Cidade-estado asiática extremamente moderna e conhecida por sua limpeza rigorosa', 'categoria': 'Paises', 'dificuldade': 'dificil'},
+      {'texto': 'ETIOPIA', 'dica': 'País africano considerado o berço da humanidade e do café', 'categoria': 'Paises', 'dificuldade': 'dificil'},
+      {'texto': 'DINAMARCA', 'dica': 'País nórdico de onde surgiram os blocos de montar da LEGO', 'categoria': 'Paises', 'dificuldade': 'dificil'},
+      {'texto': 'CATAR', 'dica': 'Pequeno e rico país do Oriente Médio que sediou a Copa do Mundo de 2022', 'categoria': 'Paises', 'dificuldade': 'dificil'},
+      {'texto': 'URUGUAI', 'dica': 'País sul-americano que sediou e venceu a primeira Copa do Mundo em 1930', 'categoria': 'Paises', 'dificuldade': 'dificil'},
+      {'texto': 'CROACIA', 'dica': 'País europeu com litoral deslumbrante no Mar Adriático e vice-campeão em 2018', 'categoria': 'Paises', 'dificuldade': 'dificil'},
+      {'texto': 'LIBANO', 'dica': 'País do Oriente Médio representado pela árvore cedro em sua bandeira', 'categoria': 'Paises', 'dificuldade': 'dificil'},
+      {'texto': 'MALDIVAS', 'dica': 'País insular no Oceano Índico famoso por seus resorts de luxo sobre a água', 'categoria': 'Paises', 'dificuldade': 'dificil'},
+      {'texto': 'MÔNACO', 'dica': 'O segundo menor país do mundo, famoso pelo Grande Prêmio de Fórmula 1', 'categoria': 'Paises', 'dificuldade': 'dificil'},
+
     ];
 
     for (final p in palavras) {
