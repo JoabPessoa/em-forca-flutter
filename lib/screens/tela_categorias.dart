@@ -59,6 +59,8 @@ class _TelaCategoriasState extends State<TelaCategorias> {
         return 'assets/images/btn_cat_mitologias.png';
       case 'Contos de Fada':
         return 'assets/images/btn_cat_fadas.png';
+      case 'Paises':
+        return 'assets/images/btn_cat_paises.png';
       default:
         return 'assets/images/btn_cat_todas.png';
     }

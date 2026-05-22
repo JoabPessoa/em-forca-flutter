@@ -57,6 +57,7 @@ class _TelaPersonalizacaoState extends State<TelaPersonalizacao> {
       case 'Música - Cantores': return 'assets/images/btn_cat_cantores.png';
       case 'Mitologia': return 'assets/images/btn_cat_mitologias.png';
       case 'Contos de Fada': return 'assets/images/btn_cat_fadas.png';
+      case 'Paises': return 'assets/images/btn_cat_paises.png';
       default: return 'assets/images/btn_cat_todas.png';
     }
   }
@@ -71,6 +72,7 @@ class _TelaPersonalizacaoState extends State<TelaPersonalizacao> {
       case 'Tecnologia': return 'assets/images/btn_cat_d_tecnologia.png';
       case 'Mitologia': return 'assets/images/btn_cat_d_mitologias.png';
       case 'Contos de Fada': return 'assets/images/btn_cat_d_fadas.png';
+      case 'Paises': return 'assets/images/btn_cat_d_paises.png';
       case 'Música - Cantores': return 'assets/images/btn_cat_d_cantores.png';
 
       default: return 'assets/images/btn_cat_todas.png';
