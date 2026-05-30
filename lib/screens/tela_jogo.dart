@@ -253,7 +253,7 @@ class _TelaJogoState extends State<TelaJogo> {
               const SizedBox(height: 16),
               const Text(
                 'Seu progresso será perdido.',
-                style: TextStyle(color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w600),
+                style: TextStyle(color: Colors.black54, fontSize: 13, fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
@@ -433,7 +433,7 @@ class _TelaJogoState extends State<TelaJogo> {
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
         child: _dicaRevelada
             ? Center(
-          child: Text(dica, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTema.texto)),
+          child: Text(dica, textAlign: TextAlign.center, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppTema.texto)),
         )
             : GestureDetector(
           onTap: _revelarDica,
