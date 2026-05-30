@@ -28,7 +28,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 6,
+      version: 7,
       onCreate: _criarTabelas,
       onUpgrade: (db, oldVersion, newVersion) async {
         // MUDANÇA 2: Se a versão aumentar, apaga o banco velho e cria o novo com as palavras atualizadas
@@ -258,7 +258,6 @@ class DatabaseHelper {
       {'texto': 'CAETANO VELOSO', 'dica': 'Artista brasileiro ligado à MPB e ao tropicalismo', 'categoria': 'Música - Cantores', 'dificuldade': 'dificil'},
 
       // --- ANIMAIS ---
-      // 30 palavras
       {'texto': 'CACHORRO', 'dica': 'Animal doméstico conhecido por sua lealdade', 'categoria': 'Animais', 'dificuldade': 'facil'},
       {'texto': 'GATO', 'dica': 'Animal doméstico conhecido por ser independente', 'categoria': 'Animais', 'dificuldade': 'facil'},
       {'texto': 'ELEFANTE', 'dica': 'Animal grande conhecido por sua tromba', 'categoria': 'Animais', 'dificuldade': 'facil'},
@@ -289,6 +288,25 @@ class DatabaseHelper {
       {'texto': 'QUATI', 'dica': 'Mamífero de focinho alongado encontrado nas Américas', 'categoria': 'Animais', 'dificuldade': 'dificil'},
       {'texto': 'BICHO PREGUICA', 'dica': 'Animal conhecido por se mover lentamente', 'categoria': 'Animais', 'dificuldade': 'dificil'},
       {'texto': 'TAMANDUA', 'dica': 'Animal que se alimenta principalmente de formigas', 'categoria': 'Animais', 'dificuldade': 'dificil'},
+      {'texto': 'PORCO', 'dica': 'Animal de fazenda que gosta de rolar na lama', 'categoria': 'Animais', 'dificuldade': 'facil'},
+      {'texto': 'VACA', 'dica': 'Animal que nos fornece leite e vive no pasto', 'categoria': 'Animais', 'dificuldade': 'facil'},
+      {'texto': 'GALINHA', 'dica': 'Ave doméstica que bota ovos e cacareja', 'categoria': 'Animais', 'dificuldade': 'facil'},
+      {'texto': 'OVELHA', 'dica': 'Animal conhecido por sua lã macia e branca', 'categoria': 'Animais', 'dificuldade': 'facil'},
+      {'texto': 'ABELHA', 'dica': 'Inseto polinizador que produz mel e vive em colmeias', 'categoria': 'Animais', 'dificuldade': 'facil'},
+      {'texto': 'LACRAIA', 'dica': 'Artrópode de corpo longo e muitas pernas, também chamado de centopeia', 'categoria': 'Animais', 'dificuldade': 'medio'},
+      {'texto': 'ZEBRA', 'dica': 'Mamífero africano conhecido por suas listras pretas e brancas', 'categoria': 'Animais', 'dificuldade': 'medio'},
+      {'texto': 'PANDA', 'dica': 'Urso asiático que se alimenta quase exclusivamente de bambu', 'categoria': 'Animais', 'dificuldade': 'medio'},
+      {'texto': 'ESCORPIAO', 'dica': 'Aracnídeo que possui um ferrão venenoso na ponta da cauda', 'categoria': 'Animais', 'dificuldade': 'medio'},
+      {'texto': 'MORCEGO', 'dica': 'O único mamífero capaz de voar verdadeiramente', 'categoria': 'Animais', 'dificuldade': 'medio'},
+      {'texto': 'HIPOPOTAMO', 'dica': 'Grande mamífero africano que passa a maior parte do dia na água', 'categoria': 'Animais', 'dificuldade': 'medio'},
+      {'texto': 'POLVO', 'dica': 'Molusco marinho com oito braços e alta inteligência', 'categoria': 'Animais', 'dificuldade': 'medio'},
+      {'texto': 'DIABO DA TASMANIA', 'dica': 'Marsupial carnívoro de mordida poderosa encontrado na Austrália', 'categoria': 'Animais', 'dificuldade': 'dificil'},
+      {'texto': 'DRAGAO DE KOMODO', 'dica': 'O maior lagarto do mundo, nativo da Indonésia', 'categoria': 'Animais', 'dificuldade': 'dificil'},
+      {'texto': 'PEIXE BOI', 'dica': 'Mamífero aquático dócil que se alimenta de plantas', 'categoria': 'Animais', 'dificuldade': 'dificil'},
+      {'texto': 'NARVAL', 'dica': 'Baleia conhecida como o unicórnio do mar devido à sua longa presa', 'categoria': 'Animais', 'dificuldade': 'dificil'},
+      {'texto': 'PANGOLIM', 'dica': 'Único mamífero com o corpo coberto por escamas de queratina', 'categoria': 'Animais', 'dificuldade': 'dificil'},
+      {'texto': 'LULA GIGANTE', 'dica': 'Invertebrado misterioso que vive nas profundezas do oceano', 'categoria': 'Animais', 'dificuldade': 'dificil'},
+      {'texto': 'Hiena', 'dica': 'Mamífero carnívoro conhecido por emitir um som semelhante a uma risada', 'categoria': 'Animais', 'dificuldade': 'dificil'},
 
       // -- Mitologia
       // -- 28 Palavras
