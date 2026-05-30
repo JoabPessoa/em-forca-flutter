@@ -104,12 +104,12 @@ class _TelaCategoriasState extends State<TelaCategorias> {
         const Text(
           'Dificuldade:',
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 14,
             fontWeight: FontWeight.w900,
             color: AppTema.texto,
           ),
         ).animate().fadeIn(delay: 200.ms),
-        const SizedBox(height: 8),
+        const SizedBox(height: 3),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -174,7 +174,7 @@ class _TelaCategoriasState extends State<TelaCategorias> {
                       const Text(
                         'Escolha um tema:',
                         style: TextStyle(
-                          fontSize: 26,
+                          fontSize: 20,
                           fontWeight: FontWeight.w900,
                           color: AppTema.texto,
                         ),
@@ -183,7 +183,7 @@ class _TelaCategoriasState extends State<TelaCategorias> {
                       const Text(
                         'O que vamos desenhar na forca hoje?',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 15,
                           color: Colors.black54,
                           fontWeight: FontWeight.w700,
                         ),
