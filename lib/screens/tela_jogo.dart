@@ -480,26 +480,49 @@ class _TelaJogoState extends State<TelaJogo> {
 
   Widget _buildMascara() {
     if (_palavraAtual == null) return const SizedBox();
-    final palavraReal = _palavraAtual!.texto.toUpperCase();
+
+    // 1. Dividimos a frase em palavras individuais para evitar quebras no meio delas
+    final partes = _palavraAtual!.texto.toUpperCase().split(' ');
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Wrap(
         alignment: WrapAlignment.center,
-        spacing: 6,
-        runSpacing: 6,
-        children: palavraReal.split('').map((letra) {
-          if (letra == ' ') return const SizedBox(width: 16);
-          final revelada = letra == '-' || _letrasDescobertas.contains(letra);
-          return AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            width: 30, height: 36,
-            decoration: BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(color: AppTema.texto, width: 3)
-                )
-            ),
-            child: Center(child: Text(revelada ? letra : '', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: AppTema.texto))),
+        spacing: 20, // Espaço horizontal entre palavras (ex: entre "INTELIGÊNCIA" e "ARTIFICIAL")
+        runSpacing: 12, // Espaço vertical caso a próxima palavra precise pular de linha
+        children: partes.map((palavra) {
+          // 2. Cada palavra é colocada em uma Row que não quebra internamente
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            children: palavra.split('').map((letra) {
+              final revelada = letra == '-' || _letrasDescobertas.contains(letra);
+
+              return Container(
+                // 3. Ajustamos a largura para 26 para caber mais letras por linha em telas menores
+                width: 26,
+                height: 36,
+                margin: const EdgeInsets.symmetric(horizontal: 1.5),
+                decoration: const BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: AppTema.texto, width: 3),
+                  ),
+                ),
+                child: Center(
+                  child: FittedBox(
+                    // 4. Se a letra for maior que o espaço disponível, ela encolhe automaticamente
+                    fit: BoxFit.contain,
+                    child: Text(
+                      revelada ? letra : '',
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w900,
+                        color: AppTema.texto,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
           );
         }).toList(),
       ),
