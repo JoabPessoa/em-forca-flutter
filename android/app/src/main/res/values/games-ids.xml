@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Google Play game services IDs. Save this file as res/values/games-ids.xml in your project.-->
+<resources>
+    <!--app_id-->
+    <string name="app_id" translatable="false">68477974755</string>
+    <!--package_name-->
+    <string name="package_name" translatable="false">com.jamlabs.emforca</string>
+    <!--achievement Primeiro Rascunho-->
+    <string name="achievement_primeiro_rascunho" translatable="false">CgkI4_HrjP8BEAIQGA</string>
+    <!--achievement Quadro Preenchido-->
+    <string name="achievement_quadro_preenchido" translatable="false">CgkI4_HrjP8BEAIQIA</string>
+    <!--achievement Veterano do Giz-->
+    <string name="achievement_veterano_do_giz" translatable="false">CgkI4_HrjP8BEAIQIw</string>
+    <!--achievement Traço Perfeito-->
+    <string name="achievement_trao_perfeito" translatable="false">CgkI4_HrjP8BEAIQCQ</string>
+    <!--achievement Quadro Imaculado-->
+    <string name="achievement_quadro_imaculado" translatable="false">CgkI4_HrjP8BEAIQFw</string>
+    <!--achievement Mestre do Marcador-->
+    <string name="achievement_mestre_do_marcador" translatable="false">CgkI4_HrjP8BEAIQDw</string>
+    <!--achievement No Limite do Feltro-->
+    <string name="achievement_no_limite_do_feltro" translatable="false">CgkI4_HrjP8BEAIQGw</string>
+    <!--achievement Divisória no Quadro-->
+    <string name="achievement_divisria_no_quadro" translatable="false">CgkI4_HrjP8BEAIQFA</string>
+    <!--achievement Duelo de Pilotos-->
+    <string name="achievement_duelo_de_pilotos" translatable="false">CgkI4_HrjP8BEAIQBA</string>
+    <!--achievement Conhecimento Geral-->
+    <string name="achievement_conhecimento_geral" translatable="false">CgkI4_HrjP8BEAIQEg</string>
+    <!--achievement Arquiteto da Forca-->
+    <string name="achievement_arquiteto_da_forca" translatable="false">CgkI4_HrjP8BEAIQJQ</string>
+    <!--achievement Observador de Pássaros-->
+    <string name="achievement_observador_de_pssaros" translatable="false">CgkI4_HrjP8BEAIQLQ</string>
+    <!--achievement Domador de Feras-->
+    <string name="achievement_domador_de_feras" translatable="false">CgkI4_HrjP8BEAIQCg</string>
+    <!--achievement Rei da Selva-->
+    <string name="achievement_rei_da_selva" translatable="false">CgkI4_HrjP8BEAIQKQ</string>
+    <!--achievement Degustador Curioso-->
+    <string name="achievement_degustador_curioso" translatable="false">CgkI4_HrjP8BEAIQAg</string>
+    <!--achievement Crítico Gastronômico-->
+    <string name="achievement_crtico_gastronmico" translatable="false">CgkI4_HrjP8BEAIQDQ</string>
+    <!--achievement Chef Estrela Michelin-->
+    <string name="achievement_chef_estrela_michelin" translatable="false">CgkI4_HrjP8BEAIQKg</string>
+    <!--achievement Era uma Vez-->
+    <string name="achievement_era_uma_vez" translatable="false">CgkI4_HrjP8BEAIQBQ</string>
+    <!--achievement Nobre Cavaleiro-->
+    <string name="achievement_nobre_cavaleiro" translatable="false">CgkI4_HrjP8BEAIQCw</string>
+    <!--achievement Guardião do Reino-->
+    <string name="achievement_guardio_do_reino" translatable="false">CgkI4_HrjP8BEAIQEQ</string>
+    <!--achievement Reserva do Time-->
+    <string name="achievement_reserva_do_time" translatable="false">CgkI4_HrjP8BEAIQFQ</string>
+    <!--achievement Titular Absoluto-->
+    <string name="achievement_titular_absoluto" translatable="false">CgkI4_HrjP8BEAIQIQ</string>
+    <!--achievement Lenda Olímpica-->
+    <string name="achievement_lenda_olmpica" translatable="false">CgkI4_HrjP8BEAIQLA</string>
+    <!--achievement Espectador de Pipoca-->
+    <string name="achievement_espectador_de_pipoca" translatable="false">CgkI4_HrjP8BEAIQLg</string>
+    <!--achievement Crítico de Cinema-->
+    <string name="achievement_crtico_de_cinema" translatable="false">CgkI4_HrjP8BEAIQKw</string>
+    <!--achievement Cineasta Premiado-->
+    <string name="achievement_cineasta_premiado" translatable="false">CgkI4_HrjP8BEAIQBg</string>
+    <!--achievement Iniciado do Oráculo-->
+    <string name="achievement_iniciado_do_orculo" translatable="false">CgkI4_HrjP8BEAIQIg</string>
+    <!--achievement Herói Lendário-->
+    <string name="achievement_heri_lendrio" translatable="false">CgkI4_HrjP8BEAIQHA</string>
+    <!--achievement Divindade Suprema-->
+    <string name="achievement_divindade_suprema" translatable="false">CgkI4_HrjP8BEAIQAw</string>
+    <!--achievement Ouvinte de Rádio-->
+    <string name="achievement_ouvinte_de_rdio" translatable="false">CgkI4_HrjP8BEAIQBw</string>
+    <!--achievement Músico de Coreto-->
+    <string name="achievement_msico_de_coreto" translatable="false">CgkI4_HrjP8BEAIQHw</string>
+    <!--achievement Virtuoso da Orquestra-->
+    <string name="achievement_virtuoso_da_orquestra" translatable="false">CgkI4_HrjP8BEAIQHQ</string>
+    <!--achievement Fã de Carteirinha-->
+    <string name="achievement_f_de_carteirinha" translatable="false">CgkI4_HrjP8BEAIQFg</string>
+    <!--achievement Astro do Palco-->
+    <string name="achievement_astro_do_palco" translatable="false">CgkI4_HrjP8BEAIQEA</string>
+    <!--achievement Ícone Global-->
+    <string name="achievement_cone_global" translatable="false">CgkI4_HrjP8BEAIQJg</string>
+    <!--achievement Turista Local-->
+    <string name="achievement_turista_local" translatable="false">CgkI4_HrjP8BEAIQEw</string>
+    <!--achievement Viajante de Elite-->
+    <string name="achievement_viajante_de_elite" translatable="false">CgkI4_HrjP8BEAIQLw</string>
+    <!--achievement Cidadão do Mundo-->
+    <string name="achievement_cidado_do_mundo" translatable="false">CgkI4_HrjP8BEAIQDA</string>
+    <!--achievement Hello World!-->
+    <string name="achievement_hello_world" translatable="false">CgkI4_HrjP8BEAIQGg</string>
+    <!--achievement Arquiteto de Sistemas-->
+    <string name="achievement_arquiteto_de_sistemas" translatable="false">CgkI4_HrjP8BEAIQJw</string>
+    <!--achievement Mestre do Código-->
+    <string name="achievement_mestre_do_cdigo" translatable="false">CgkI4_HrjP8BEAIQGQ</string>
+    <!--achievement Apagador Gasto-->
+    <string name="achievement_apagador_gasto" translatable="false">CgkI4_HrjP8BEAIQKA</string>
+    <!--achievement Quadro em Branco-->
+    <string name="achievement_quadro_em_branco" translatable="false">CgkI4_HrjP8BEAIQDg</string>
+    <!--achievement Uau nem a gente esperava por essa-->
+    <string name="achievement_uau_nem_a_gente_esperava_por_essa" translatable="false">CgkI4_HrjP8BEAIQCA</string>
+    <!--achievement Lacriane Lacraia Lacradora-->
+    <string name="achievement_lacriane_lacraia_lacradora" translatable="false">CgkI4_HrjP8BEAIQJA</string>
+    <!--achievement -6.82778 -35.75778-->
+    <string name="achievement_6.82778_35.75778" translatable="false">CgkI4_HrjP8BEAIQHg</string>
+</resources>
