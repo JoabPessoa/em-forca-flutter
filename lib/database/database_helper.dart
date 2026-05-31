@@ -28,12 +28,12 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 7,
+      version: 8, // <-- Versão atualizada para criar a nova tabela
       onCreate: _criarTabelas,
       onUpgrade: (db, oldVersion, newVersion) async {
-        // MUDANÇA 2: Se a versão aumentar, apaga o banco velho e cria o novo com as palavras atualizadas
         await db.execute('DROP TABLE IF EXISTS palavras');
         await db.execute('DROP TABLE IF EXISTS pontuacao');
+        await db.execute('DROP TABLE IF EXISTS estatisticas'); // <-- Adicionado
         await _criarTabelas(db, newVersion);
       },
     );
@@ -58,6 +58,19 @@ class DatabaseHelper {
         derrotas    INTEGER NOT NULL DEFAULT 0
       )
     ''');
+
+    // <-- NOVO: Tabela para o perfil do usuário e conquistas
+    await db.execute('''
+      CREATE TABLE estatisticas (
+        id          INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome        TEXT    NOT NULL UNIQUE,
+        valor       INTEGER NOT NULL DEFAULT 0
+      )
+    ''');
+
+    // Inicializando as estatísticas base
+    await db.insert('estatisticas', {'nome': 'total_partidas', 'valor': 0});
+    await db.insert('estatisticas', {'nome': 'sequencia_vitorias', 'valor': 0});
 
     await _popularBancoDados(db);
   }
@@ -228,7 +241,7 @@ class DatabaseHelper {
       {'texto': 'PARTITURA', 'dica': 'Registro escrito das notas musicais', 'categoria': 'Música', 'dificuldade': 'dificil'},
       {'texto': 'CORAL', 'dica': 'Grupo de pessoas cantando juntas', 'categoria': 'Música', 'dificuldade': 'facil'},
       {'texto': 'MPB', 'dica': 'Sigla para Música Popular Brasileira', 'categoria': 'Música', 'dificuldade': 'facil'},
-      
+
       // --- MÚSICA - CANTORES ---
       // 25 palavras
       {'texto': 'MICHAEL JACKSON', 'dica': 'Artista conhecido como uma das maiores figuras do pop mundial', 'categoria': 'Música - Cantores', 'dificuldade': 'facil'},
@@ -310,62 +323,62 @@ class DatabaseHelper {
 
       // -- Mitologia
       // -- 28 Palavras
-        {'texto': 'THOR', 'dica': 'Deus nórdico do trovão que empunha o martelo Mjolnir', 'categoria': 'Mitologia', 'dificuldade': 'facil'},
-        {'texto': 'ZEUS', 'dica': 'O deus supremo do Olimpo e senhor dos raios na Grécia Antiga', 'categoria': 'Mitologia', 'dificuldade': 'facil'},
-        {'texto': 'MEDUSA', 'dica': 'Criatura com serpentes na cabeça que transformava quem olhasse para ela em pedra', 'categoria': 'Mitologia', 'dificuldade': 'facil'},
-        {'texto': 'POSEIDON', 'dica': 'Deus grego dos mares e dos oceanos que carrega um tridente', 'categoria': 'Mitologia', 'dificuldade': 'facil'},
-        {'texto': 'ANUBIS', 'dica': 'Deus egípcio dos mortos com cabeça de chacal', 'categoria': 'Mitologia', 'dificuldade': 'facil'},
-        {'texto': 'HERCULES', 'dica': 'Semideus conhecido por sua força incomum e pelos seus doze trabalhos', 'categoria': 'Mitologia', 'dificuldade': 'facil'},
-        {'texto': 'CUPIDO', 'dica': 'Deus romano do amor armado com arco e flecha', 'categoria': 'Mitologia', 'dificuldade': 'facil'},
-        {'texto': 'MINOTAURO', 'dica': 'Criatura metade homem e metade touro que habitava o labirinto de Creta', 'categoria': 'Mitologia', 'dificuldade': 'facil'},
-        {'texto': 'PEGASO', 'dica': 'Cavalo alado símbolo da imortalidade na mitologia grega', 'categoria': 'Mitologia', 'dificuldade': 'facil'},
-        {'texto': 'ODIN', 'dica': 'O Pai de Todos e governante de Asgard na mitologia nórdica', 'categoria': 'Mitologia', 'dificuldade': 'medio'},
-        {'texto': 'FENRIR', 'dica': 'Lobo monstruoso filho de Loki destinado a lutar no Ragnarok', 'categoria': 'Mitologia', 'dificuldade': 'medio'},
-        {'texto': 'AFRODITE', 'dica': 'Deusa grega do amor, da beleza e da sedução', 'categoria': 'Mitologia', 'dificuldade': 'medio'},
-        {'texto': 'CENTAURO', 'dica': 'Criatura mitológica com corpo de cavalo e tronco e cabeça de homem', 'categoria': 'Mitologia', 'dificuldade': 'medio'},
-        {'texto': 'VALQUIRIA', 'dica': 'Guerreira nórdica que escolhia os caídos em combate para ir a Valhala', 'categoria': 'Mitologia', 'dificuldade': 'medio'},
-        {'texto': 'LOKI', 'dica': 'Deus da trapaça e da travessura na mitologia nórdica', 'categoria': 'Mitologia', 'dificuldade': 'medio'},
-        {'texto': 'HADES', 'dica': 'Deus grego do submundo e do reino dos mortos', 'categoria': 'Mitologia', 'dificuldade': 'medio'},
-        {'texto': 'QUIMERA', 'dica': 'Monstro terrível que cuspia fogo com corpo de leão, cabra e cobra', 'categoria': 'Mitologia', 'dificuldade': 'medio'},
-        {'texto': 'CRONOS', 'dica': 'O titã do tempo que devorava os próprios filhos para manter o poder', 'categoria': 'Mitologia', 'dificuldade': 'medio'},
-        {'texto': 'CERBERO', 'dica': 'Cão de três cabeças que guardava a entrada do submundo grego', 'categoria': 'Mitologia', 'dificuldade': 'facil'},
-        {'texto': 'ACHILLES', 'dica': 'Herói da Guerra de Troia que tinha o calcanhar como único ponto vulnerável', 'categoria': 'Mitologia', 'dificuldade': 'dificil'},
-        {'texto': 'OSIRIS', 'dica': 'Deus egípcio do renascimento que foi assassinado por seu irmão Seth', 'categoria': 'Mitologia', 'dificuldade': 'dificil'},
-        {'texto': 'ICARO', 'dica': 'Jovem que voou com asas de cera e penas, mas caiu quando o sol as derreteu', 'categoria': 'Mitologia', 'dificuldade': 'dificil'},
-        {'texto': 'PROMETEU', 'dica': 'Titã que roubou o fogo dos deuses para entregá-lo à humanidade', 'categoria': 'Mitologia', 'dificuldade': 'dificil'},
-        {'texto': 'VALHALA', 'dica': 'O grande salão dos mortos governado por Odin para onde iam os guerreiros dignos', 'categoria': 'Mitologia', 'dificuldade': 'dificil'},
-        {'texto': 'RAGNAROK', 'dica': 'O apocalipse e batalha final na mitologia nórdica', 'categoria': 'Mitologia', 'dificuldade': 'dificil'},
-        {'texto': 'ESFINGE', 'dica': 'Criatura que desafiava os viajantes com enigmas antes de devorá-los', 'categoria': 'Mitologia', 'dificuldade': 'dificil'},
-        {'texto': 'PERSEU', 'dica': 'Herói grego lendário que decapitou a Medusa', 'categoria': 'Mitologia', 'dificuldade': 'dificil'},
-        {'texto': 'ATENA', 'dica': 'Deusa grega da sabedoria, das artes e da estratégia militar', 'categoria': 'Mitologia', 'dificuldade': 'dificil'},
+      {'texto': 'THOR', 'dica': 'Deus nórdico do trovão que empunha o martelo Mjolnir', 'categoria': 'Mitologia', 'dificuldade': 'facil'},
+      {'texto': 'ZEUS', 'dica': 'O deus supremo do Olimpo e senhor dos raios na Grécia Antiga', 'categoria': 'Mitologia', 'dificuldade': 'facil'},
+      {'texto': 'MEDUSA', 'dica': 'Criatura com serpentes na cabeça que transformava quem olhasse para ela em pedra', 'categoria': 'Mitologia', 'dificuldade': 'facil'},
+      {'texto': 'POSEIDON', 'dica': 'Deus grego dos mares e dos oceanos que carrega um tridente', 'categoria': 'Mitologia', 'dificuldade': 'facil'},
+      {'texto': 'ANUBIS', 'dica': 'Deus egípcio dos mortos com cabeça de chacal', 'categoria': 'Mitologia', 'dificuldade': 'facil'},
+      {'texto': 'HERCULES', 'dica': 'Semideus conhecido por sua força incomum e pelos seus doze trabalhos', 'categoria': 'Mitologia', 'dificuldade': 'facil'},
+      {'texto': 'CUPIDO', 'dica': 'Deus romano do amor armado com arco e flecha', 'categoria': 'Mitologia', 'dificuldade': 'facil'},
+      {'texto': 'MINOTAURO', 'dica': 'Criatura metade homem e metade touro que habitava o labirinto de Creta', 'categoria': 'Mitologia', 'dificuldade': 'facil'},
+      {'texto': 'PEGASO', 'dica': 'Cavalo alado símbolo da imortalidade na mitologia grega', 'categoria': 'Mitologia', 'dificuldade': 'facil'},
+      {'texto': 'ODIN', 'dica': 'O Pai de Todos e governante de Asgard na mitologia nórdica', 'categoria': 'Mitologia', 'dificuldade': 'medio'},
+      {'texto': 'FENRIR', 'dica': 'Lobo monstruoso filho de Loki destinado a lutar no Ragnarok', 'categoria': 'Mitologia', 'dificuldade': 'medio'},
+      {'texto': 'AFRODITE', 'dica': 'Deusa grega do amor, da beleza e da sedução', 'categoria': 'Mitologia', 'dificuldade': 'medio'},
+      {'texto': 'CENTAURO', 'dica': 'Criatura mitológica com corpo de cavalo e tronco e cabeça de homem', 'categoria': 'Mitologia', 'dificuldade': 'medio'},
+      {'texto': 'VALQUIRIA', 'dica': 'Guerreira nórdica que escolhia os caídos em combate para ir a Valhala', 'categoria': 'Mitologia', 'dificuldade': 'medio'},
+      {'texto': 'LOKI', 'dica': 'Deus da trapaça e da travessura na mitologia nórdica', 'categoria': 'Mitologia', 'dificuldade': 'medio'},
+      {'texto': 'HADES', 'dica': 'Deus grego do submundo e do reino dos mortos', 'categoria': 'Mitologia', 'dificuldade': 'medio'},
+      {'texto': 'QUIMERA', 'dica': 'Monstro terrível que cuspia fogo com corpo de leão, cabra e cobra', 'categoria': 'Mitologia', 'dificuldade': 'medio'},
+      {'texto': 'CRONOS', 'dica': 'O titã do tempo que devorava os próprios filhos para manter o poder', 'categoria': 'Mitologia', 'dificuldade': 'medio'},
+      {'texto': 'CERBERO', 'dica': 'Cão de três cabeças que guardava a entrada do submundo grego', 'categoria': 'Mitologia', 'dificuldade': 'facil'},
+      {'texto': 'ACHILLES', 'dica': 'Herói da Guerra de Troia que tinha o calcanhar como único ponto vulnerável', 'categoria': 'Mitologia', 'dificuldade': 'dificil'},
+      {'texto': 'OSIRIS', 'dica': 'Deus egípcio do renascimento que foi assassinado por seu irmão Seth', 'categoria': 'Mitologia', 'dificuldade': 'dificil'},
+      {'texto': 'ICARO', 'dica': 'Jovem que voou com asas de cera e penas, mas caiu quando o sol as derreteu', 'categoria': 'Mitologia', 'dificuldade': 'dificil'},
+      {'texto': 'PROMETEU', 'dica': 'Titã que roubou o fogo dos deuses para entregá-lo à humanidade', 'categoria': 'Mitologia', 'dificuldade': 'dificil'},
+      {'texto': 'VALHALA', 'dica': 'O grande salão dos mortos governado por Odin para onde iam os guerreiros dignos', 'categoria': 'Mitologia', 'dificuldade': 'dificil'},
+      {'texto': 'RAGNAROK', 'dica': 'O apocalipse e batalha final na mitologia nórdica', 'categoria': 'Mitologia', 'dificuldade': 'dificil'},
+      {'texto': 'ESFINGE', 'dica': 'Criatura que desafiava os viajantes com enigmas antes de devorá-los', 'categoria': 'Mitologia', 'dificuldade': 'dificil'},
+      {'texto': 'PERSEU', 'dica': 'Herói grego lendário que decapitou a Medusa', 'categoria': 'Mitologia', 'dificuldade': 'dificil'},
+      {'texto': 'ATENA', 'dica': 'Deusa grega da sabedoria, das artes e da estratégia militar', 'categoria': 'Mitologia', 'dificuldade': 'dificil'},
 
-        // -- Contos de fada
-        {'texto': 'CINDERELA', 'dica': 'Gata borralheira que perde seu sapatinho de cristal ao soar da meia-noite', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
-        {'texto': 'PINOQUIO', 'dica': 'Boneco de madeira articulado que sonhava em se tornar um menino de verdade', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
-        {'texto': 'RAPUNZEL', 'dica': 'Princesa de cabelos longos aprisionada em uma torre muito alta por uma bruxa', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
-        {'texto': 'CHAPEUZINHO VERMELHO', 'dica': 'Menina que cruza a floresta para levar doces e encontra o Lobo Mau', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
-        {'texto': 'ALADIM', 'dica': 'Jovem humilde que encontra um genio capaz de realizar desejos dentro de uma lampada', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
-        {'texto': 'BRANCA DE NEVE', 'dica': 'Princesa de pele muito clara que foge da madrasta e vai morar com sete anoes', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
-        {'texto': 'LOBO MAU', 'dica': 'O grande e clássico antagonista que persegue porquinhos e chapeuzinhos na floresta', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
-        {'texto': 'BELA ADORMECIDA', 'dica': 'Princesa que cai em um sono profundo de cem anos após espetar o dedo em uma roca', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
-        {'texto': 'PETER PAN', 'dica': 'O menino que se recusava a crescer e enfrentava o Capitao Gancho', 'categoria': 'Contos de Fada', 'dificuldade': 'medio'},
-        {'texto': 'MADRASTA', 'dica': 'Figura arquetipica crue e invejosa que atormenta Branca de Neve e Cinderela', 'categoria': 'Contos de Fada', 'dificuldade': 'medio'},
-        {'texto': 'FADA MADRINHA', 'dica': 'Entidade magica com varinha de condão que realiza os desejos das protagonistas', 'categoria': 'Contos de Fada', 'dificuldade': 'medio'},
-        {'texto': 'JOAO E MARIA', 'dica': 'Irmãos que se perdem na floresta e encontram uma tentadora casa feita de doces', 'categoria': 'Contos de Fada', 'dificuldade': 'medio'},
-        {'texto': 'CARRUAGEM', 'dica': 'Meio de transporte real que volta a ser uma abobora comum após a meia-noite', 'categoria': 'Contos de Fada', 'dificuldade': 'medio'},
-        {'texto': 'RUMPELSTILTSKIN', 'dica': 'Duende misterioso que consegue transformar palha em fios de ouro puro', 'categoria': 'Contos de Fada', 'dificuldade': 'medio'},
-        {'texto': 'ESPELHO MAGICO', 'dica': 'Objeto sincero de uma rainha má que sempre responde quem é a mais bela de todas', 'categoria': 'Contos de Fada', 'dificuldade': 'medio'},
-        {'texto': 'O PATINHO FEIO', 'dica': 'Criatura rejeitada por sua feiura que acaba crescendo e virando um lindo cisne', 'categoria': 'Contos de Fada', 'dificuldade': 'medio'},
-        {'texto': 'QUEBRA NOZES', 'dica': 'Boneco soldado que ganha vida na noite de Natal para enfrentar o Rei dos Ratos', 'categoria': 'Contos de Fada', 'dificuldade': 'dificil'},
-        {'texto': 'PELE DE ASNO', 'dica': 'Princesa que se disfarça com uma capa de bicho para fugir de seu proprio reino', 'categoria': 'Contos de Fada', 'dificuldade': 'dificil'},
-        {'texto': 'FLAUTISTA DE HAMELIN', 'dica': 'Musico misterioso que hipnotiza e leva embora todos os ratos de uma cidade', 'categoria': 'Contos de Fada', 'dificuldade': 'dificil'},
-        {'texto': 'BARBA AZUL', 'dica': 'Nobre sinistro e misterioso que proibia suas esposas de entrarem em um quarto secreto', 'categoria': 'Contos de Fada', 'dificuldade': 'dificil'},
-        {'texto': 'SININHO', 'dica': 'A pequenina e ciumenta fada artesã que acompanha Peter Pan espalhando po magico', 'categoria': 'Contos de Fada', 'dificuldade': 'medio'},
-        {'texto': 'JOAO E O PE DE FEIJAO', 'dica': 'Garoto que troca uma vaca por sementes magicas que crescem ate o ceu dos gigantes', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
-        {'texto': 'SOLDADINHO DE CHUMBO', 'dica': 'Brinquedo de uma perna só que se apaixona por uma linda bailarina de papel', 'categoria': 'Contos de Fada', 'dificuldade': 'dificil'},
-        {'texto': 'ROUPA NOVA DO REI', 'dica': 'Fabula sobre um alfaiate trapaceiro que vende um traje invisivel para um monarca vaidoso', 'categoria': 'Contos de Fada', 'dificuldade': 'dificil'},
-        {'texto': 'OS TRES PORQUINHOS', 'dica': 'Irmãos construtores que testam a resistencia de suas casas contra o sopro do lobo', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
-        {'texto': 'A PEQUENA SEREIA', 'dica': 'Criatura dos oceanos que troca sua propria voz com uma bruxa para ter pernas humanas', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
+      // -- Contos de fada
+      {'texto': 'CINDERELA', 'dica': 'Gata borralheira que perde seu sapatinho de cristal ao soar da meia-noite', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
+      {'texto': 'PINOQUIO', 'dica': 'Boneco de madeira articulado que sonhava em se tornar um menino de verdade', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
+      {'texto': 'RAPUNZEL', 'dica': 'Princesa de cabelos longos aprisionada em uma torre muito alta por uma bruxa', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
+      {'texto': 'CHAPEUZINHO VERMELHO', 'dica': 'Menina que cruza a floresta para levar doces e encontra o Lobo Mau', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
+      {'texto': 'ALADIM', 'dica': 'Jovem humilde que encontra um genio capaz de realizar desejos dentro de uma lampada', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
+      {'texto': 'BRANCA DE NEVE', 'dica': 'Princesa de pele muito clara que foge da madrasta e vai morar com sete anoes', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
+      {'texto': 'LOBO MAU', 'dica': 'O grande e clássico antagonista que persegue porquinhos e chapeuzinhos na floresta', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
+      {'texto': 'BELA ADORMECIDA', 'dica': 'Princesa que cai em um sono profundo de cem anos após espetar o dedo em uma roca', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
+      {'texto': 'PETER PAN', 'dica': 'O menino que se recusava a crescer e enfrentava o Capitao Gancho', 'categoria': 'Contos de Fada', 'dificuldade': 'medio'},
+      {'texto': 'MADRASTA', 'dica': 'Figura arquetipica crue e invejosa que atormenta Branca de Neve e Cinderela', 'categoria': 'Contos de Fada', 'dificuldade': 'medio'},
+      {'texto': 'FADA MADRINHA', 'dica': 'Entidade magica com varinha de condão que realiza os desejos das protagonistas', 'categoria': 'Contos de Fada', 'dificuldade': 'medio'},
+      {'texto': 'JOAO E MARIA', 'dica': 'Irmãos que se perdem na floresta e encontram uma tentadora casa feita de doces', 'categoria': 'Contos de Fada', 'dificuldade': 'medio'},
+      {'texto': 'CARRUAGEM', 'dica': 'Meio de transporte real que volta a ser uma abobora comum após a meia-noite', 'categoria': 'Contos de Fada', 'dificuldade': 'medio'},
+      {'texto': 'RUMPELSTILTSKIN', 'dica': 'Duende misterioso que consegue transformar palha em fios de ouro puro', 'categoria': 'Contos de Fada', 'dificuldade': 'medio'},
+      {'texto': 'ESPELHO MAGICO', 'dica': 'Objeto sincero de uma rainha má que sempre responde quem é a mais bela de todas', 'categoria': 'Contos de Fada', 'dificuldade': 'medio'},
+      {'texto': 'O PATINHO FEIO', 'dica': 'Criatura rejeitada por sua feiura que acaba crescendo e virando um lindo cisne', 'categoria': 'Contos de Fada', 'dificuldade': 'medio'},
+      {'texto': 'QUEBRA NOZES', 'dica': 'Boneco soldado que ganha vida na noite de Natal para enfrentar o Rei dos Ratos', 'categoria': 'Contos de Fada', 'dificuldade': 'dificil'},
+      {'texto': 'PELE DE ASNO', 'dica': 'Princesa que se disfarça com uma capa de bicho para fugir de seu proprio reino', 'categoria': 'Contos de Fada', 'dificuldade': 'dificil'},
+      {'texto': 'FLAUTISTA DE HAMELIN', 'dica': 'Musico misterioso que hipnotiza e leva embora todos os ratos de uma cidade', 'categoria': 'Contos de Fada', 'dificuldade': 'dificil'},
+      {'texto': 'BARBA AZUL', 'dica': 'Nobre sinistro e misterioso que proibia suas esposas de entrarem em um quarto secreto', 'categoria': 'Contos de Fada', 'dificuldade': 'dificil'},
+      {'texto': 'SININHO', 'dica': 'A pequenina e ciumenta fada artesã que acompanha Peter Pan espalhando po magico', 'categoria': 'Contos de Fada', 'dificuldade': 'medio'},
+      {'texto': 'JOAO E O PE DE FEIJAO', 'dica': 'Garoto que troca uma vaca por sementes magicas que crescem ate o ceu dos gigantes', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
+      {'texto': 'SOLDADINHO DE CHUMBO', 'dica': 'Brinquedo de uma perna só que se apaixona por uma linda bailarina de papel', 'categoria': 'Contos de Fada', 'dificuldade': 'dificil'},
+      {'texto': 'ROUPA NOVA DO REI', 'dica': 'Fabula sobre um alfaiate trapaceiro que vende um traje invisivel para um monarca vaidoso', 'categoria': 'Contos de Fada', 'dificuldade': 'dificil'},
+      {'texto': 'OS TRES PORQUINHOS', 'dica': 'Irmãos construtores que testam a resistencia de suas casas contra o sopro do lobo', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
+      {'texto': 'A PEQUENA SEREIA', 'dica': 'Criatura dos oceanos que troca sua propria voz com uma bruxa para ter pernas humanas', 'categoria': 'Contos de Fada', 'dificuldade': 'facil'},
 
       // -- Paises
       {'texto': 'ALEMANHA', 'dica': 'Nação europeia famosa pela Oktoberfest e pela fabricação de carros de luxo', 'categoria': 'Paises', 'dificuldade': 'facil'},
@@ -535,5 +548,43 @@ class DatabaseHelper {
   Future<void> fechar() async {
     final db = await database;
     db.close();
+  }
+
+  // ============================================================
+  // SISTEMA DE CONQUISTAS (Estatísticas do Jogador)
+  // ============================================================
+
+  /// Busca um valor numérico de uma estatística no banco de dados
+  Future<int> buscarEstatistica(String nomeEstatistica) async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> maps = await db.query(
+      'estatisticas',
+      columns: ['valor'],
+      where: 'nome = ?',
+      whereArgs: [nomeEstatistica],
+    );
+
+    if (maps.isNotEmpty) {
+      return maps.first['valor'] as int;
+    }
+    return 0;
+  }
+
+  /// Incrementa uma estatística e retorna o novo valor
+  Future<int> incrementarEstatistica(String nomeEstatistica) async {
+    final db = await database;
+
+    // Insere com valor 1 se não existir, ou ignora se já existir
+    await db.rawInsert('''
+      INSERT OR IGNORE INTO estatisticas (nome, valor) VALUES (?, 0)
+    ''', [nomeEstatistica]);
+
+    // Atualiza incrementando +1
+    await db.rawUpdate('''
+      UPDATE estatisticas SET valor = valor + 1 WHERE nome = ?
+    ''', [nomeEstatistica]);
+
+    return await buscarEstatistica(nomeEstatistica);
   }
 }
