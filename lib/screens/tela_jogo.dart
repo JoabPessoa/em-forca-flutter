@@ -433,7 +433,7 @@ class _TelaJogoState extends State<TelaJogo> {
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
         child: _dicaRevelada
             ? Center(
-          child: Text(dica, textAlign: TextAlign.center, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppTema.texto)),
+          child: Text(dica, textAlign: TextAlign.center, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppTema.texto)),
         )
             : GestureDetector(
           onTap: _revelarDica,

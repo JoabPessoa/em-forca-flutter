@@ -224,6 +224,22 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  games_services:
+    dependency: "direct main"
+    description:
+      name: games_services
+      sha256: e968ca9dbca98a4fb0360b93dd00f072b6f018353e45dcb0049659b556c4a87d
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.1"
+  games_services_platform_interface:
+    dependency: transitive
+    description:
+      name: games_services_platform_interface
+      sha256: b4e2fd1f26c4e260a76756c8f36d1fef99dd7a3e102b8591a8abfa2a925e974e
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.1"
   glob:
     dependency: transitive
     description:
