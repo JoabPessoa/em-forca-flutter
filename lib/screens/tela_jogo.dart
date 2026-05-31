@@ -205,7 +205,10 @@ class _TelaJogoState extends State<TelaJogo> {
       AchievementsManager.processarFimDePartida(
         venceu: vitoria,
         categoriaJogada: _palavraAtual!.categoria,
-        dificuldade: _palavraAtual!.dificuldade,
+        modoJogo: widget.modoJogo,
+        modoMultiplayer: widget.modoMultiplayer,
+        palavraTexto: _palavraAtual!.texto,
+        categoriasSelecionadas: widget.categorias,
         errosCometidos: _erros,
       );
     }

@@ -28,7 +28,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 8, // <-- Versão atualizada para criar a nova tabela
+      version: 9, // <-- Versão atualizada para criar a nova tabela
       onCreate: _criarTabelas,
       onUpgrade: (db, oldVersion, newVersion) async {
         await db.execute('DROP TABLE IF EXISTS palavras');
@@ -290,7 +290,7 @@ class DatabaseHelper {
       {'texto': 'RAPOSA', 'dica': 'Animal conhecido por sua esperteza', 'categoria': 'Animais', 'dificuldade': 'medio'},
       {'texto': 'CAMELO', 'dica': 'Animal adaptado a regiões desérticas', 'categoria': 'Animais', 'dificuldade': 'medio'},
       {'texto': 'PAVAO', 'dica': 'Ave conhecida por sua cauda colorida', 'categoria': 'Animais', 'dificuldade': 'medio'},
-      {'texto': 'ARARA', 'dica': 'Ave colorida comum em regiões tropicais', 'categoria': 'Animais', 'dificuldade': 'medio'},
+      {'texto': 'ARARA', 'dica': 'Ave colorida comum em regiões tropicais', 'categoria': 'Animais', 'dificuldade': 'facil'},
       {'texto': 'ORNITORRINCO', 'dica': 'Animal incomum que bota ovos e é mamífero', 'categoria': 'Animais', 'dificuldade': 'dificil'},
       {'texto': 'CAMALEAO', 'dica': 'Réptil conhecido por mudar de cor', 'categoria': 'Animais', 'dificuldade': 'dificil'},
       {'texto': 'TATU BOLA', 'dica': 'Animal que pode se enrolar para se proteger', 'categoria': 'Animais', 'dificuldade': 'dificil'},
@@ -319,7 +319,7 @@ class DatabaseHelper {
       {'texto': 'NARVAL', 'dica': 'Baleia conhecida como o unicórnio do mar devido à sua longa presa', 'categoria': 'Animais', 'dificuldade': 'dificil'},
       {'texto': 'PANGOLIM', 'dica': 'Único mamífero com o corpo coberto por escamas de queratina', 'categoria': 'Animais', 'dificuldade': 'dificil'},
       {'texto': 'LULA GIGANTE', 'dica': 'Invertebrado misterioso que vive nas profundezas do oceano', 'categoria': 'Animais', 'dificuldade': 'dificil'},
-      {'texto': 'Hiena', 'dica': 'Mamífero carnívoro conhecido por emitir um som semelhante a uma risada', 'categoria': 'Animais', 'dificuldade': 'dificil'},
+      {'texto': 'HIENA', 'dica': 'Mamífero carnívoro conhecido por emitir um som semelhante a uma risada', 'categoria': 'Animais', 'dificuldade': 'dificil'},
 
       // -- Mitologia
       // -- 28 Palavras
