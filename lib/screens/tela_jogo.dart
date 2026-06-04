@@ -178,21 +178,22 @@ class _TelaJogoState extends State<TelaJogo> {
   Future<void> _mostrarResultado({required bool vitoria}) async {
     final db = DatabaseHelper.instance;
 
-    // 1. Atualizar Estatísticas Locais (Singleplayer e Conquistas)
     await db.incrementarEstatistica('total_partidas');
-    if (_palavraAtual != null) {
-      await db.incrementarEstatistica('cat_${_palavraAtual!.categoria}');
-    }
 
     if (vitoria) {
       await db.incrementarEstatistica('sequencia_vitorias');
+
+      // NOVA POSIÇÃO: Agora só conta a palavra da categoria se o jogador ACERTAR!
+      if (_palavraAtual != null) {
+        await db.incrementarEstatistica('cat_${_palavraAtual!.categoria}');
+      }
+
       if (widget.modoMultiplayer) {
         if (_jogadorAtual == 1) _vitoriasJ1++;
         else _vitoriasJ2++;
         await db.registrarVitoria('Jogador $_jogadorAtual');
       }
     } else {
-      // Zera a sequência de vitórias em caso de derrota
       final banco = await db.database;
       await banco.rawUpdate("UPDATE estatisticas SET valor = 0 WHERE nome = 'sequencia_vitorias'");
       if (widget.modoMultiplayer) {
@@ -200,7 +201,6 @@ class _TelaJogoState extends State<TelaJogo> {
       }
     }
 
-    // 2. Disparar Validação na Nuvem (Fogo e Esqueça)
     if (_palavraAtual != null) {
       AchievementsManager.processarFimDePartida(
         venceu: vitoria,
@@ -213,8 +213,9 @@ class _TelaJogoState extends State<TelaJogo> {
       );
     }
 
-    // 3. Interface Visual do Dialog (Exatamente como estava)
     if (!mounted) return;
+
+    // O resto da interface do showDialog mantém-se exatamente igual a partir daqui...
     showDialog(
       context: context,
       barrierDismissible: false,

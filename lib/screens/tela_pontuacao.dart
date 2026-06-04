@@ -1,6 +1,6 @@
 // ============================================================
-// TELA DE PONTUAÇÃO
-// Exibe o placar salvo no banco de dados SQLite
+// TELA DE PONTUAÇÃO E PROGRESSO
+// Exibe o placar multiplayer salvo e o hub de conquistas evolutivas
 // ============================================================
 
 import 'package:flutter/material.dart';
@@ -16,19 +16,40 @@ class TelaPontuacao extends StatefulWidget {
 
 class _TelaPontuacaoState extends State<TelaPontuacao> {
   List<Map<String, dynamic>> _pontuacao = [];
+  Map<String, int> _estatisticas = {};
+  bool _carregando = true;
 
   @override
   void initState() {
     super.initState();
-    _carregarPontuacao();
+    _carregarDados();
   }
 
-  Future<void> _carregarPontuacao() async {
-    final p = await DatabaseHelper.instance.buscarPontuacao();
-    setState(() => _pontuacao = p);
+  Future<void> _carregarDados() async {
+    final db = DatabaseHelper.instance;
+    final p = await db.buscarPontuacao();
+
+    // Carrega o progresso de cada categoria (acertos)
+    final categorias = [
+      'Animais', 'Comidas e Bebidas', 'Contos de Fada', 'Esportes',
+      'Filmes e Séries', 'Mitologia', 'Música', 'Música - Cantores', 'Paises', 'Tecnologia'
+    ];
+
+    Map<String, int> statsTemp = {};
+    for (String cat in categorias) {
+      statsTemp[cat] = await db.buscarEstatistica('cat_$cat');
+    }
+
+    if (mounted) {
+      setState(() {
+        _pontuacao = p;
+        _estatisticas = statsTemp;
+        _carregando = false;
+      });
+    }
   }
 
-  // Novo pop-up de reset customizado com o papel amassado
+  // Novo pop-up de reset customizado com o papel amassado[cite: 16]
   Future<void> _resetar() async {
     final confirmar = await showDialog<bool>(
       context: context,
@@ -80,9 +101,91 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
     );
 
     if (confirmar == true) {
+      setState(() => _carregando = true);
       await DatabaseHelper.instance.resetarPontuacao();
-      _carregarPontuacao();
+      await _carregarDados();
     }
+  }
+
+  // Constrói visualmente um cartão de conquista evolutiva que ocupa pouco espaço
+  Widget _buildCardEvolutivo(String tituloCategoria, List<String> titulosNiveis) {
+    int progressoAtual = _estatisticas[tituloCategoria] ?? 0;
+
+    int meta;
+    String tituloAtual;
+    double porcentagem;
+    bool concluido = false;
+
+    // Escada de evolução: 10 -> 25 -> 50
+    if (progressoAtual < 10) {
+      meta = 10;
+      tituloAtual = titulosNiveis[0];
+    } else if (progressoAtual < 25) {
+      meta = 25;
+      tituloAtual = titulosNiveis[1];
+    } else if (progressoAtual < 50) {
+      meta = 50;
+      tituloAtual = titulosNiveis[2];
+    } else {
+      meta = 50;
+      progressoAtual = 50;
+      tituloAtual = titulosNiveis[2];
+      concluido = true;
+    }
+
+    porcentagem = progressoAtual / meta;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: concluido ? AppTema.verde.withOpacity(0.1) : Colors.white.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: concluido ? AppTema.verde : AppTema.texto.withOpacity(0.2), width: 2),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                tituloAtual,
+                style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: AppTema.texto),
+              ),
+              if (concluido)
+                const Icon(Icons.star_rounded, color: Colors.amber, size: 28),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Encontre e acerte palavras de $tituloCategoria.',
+            style: const TextStyle(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: LinearProgressIndicator(
+                    value: porcentagem,
+                    minHeight: 10,
+                    backgroundColor: Colors.grey[200],
+                    color: concluido ? AppTema.verde : AppTema.azul,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                '$progressoAtual / $meta',
+                style: const TextStyle(fontWeight: FontWeight.w900, color: AppTema.texto),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -99,7 +202,7 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 1. FUNDO DO QUADRO BRANCO
+          // 1. FUNDO DO QUADRO BRANCO[cite: 16]
           Image.asset(
             'assets/images/bg_quadro_branco.jpg',
             fit: BoxFit.cover,
@@ -109,7 +212,7 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
           SafeArea(
             child: Column(
               children: [
-                // --- CABEÇALHO CUSTOMIZADO ---
+                // --- CABEÇALHO CUSTOMIZADO ---[cite: 16]
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
                   child: Row(
@@ -121,12 +224,12 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
                       ),
                       Row(
                         children: [
-                          Image.asset('assets/images/ic_vitoria.png', width: 32), // Troféu ilustrado
+                          Image.asset('assets/images/ic_vitoria.png', width: 32),
                           const SizedBox(width: 8),
                           const Text(
-                            'Placar',
+                            'Progresso e Placar',
                             style: TextStyle(
-                                fontSize: 24,
+                                fontSize: 22,
                                 fontWeight: FontWeight.w900,
                                 color: AppTema.texto
                             ),
@@ -135,18 +238,24 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
                       ),
                       GestureDetector(
                         onTap: _resetar,
-                        child: Image.asset('assets/images/ic_reset.png', width: 36), // Ícone de reset ilustrado
+                        child: Image.asset('assets/images/ic_reset.png', width: 36),
                       ),
                     ],
                   ),
                 ),
 
-                // --- LISTA DE PONTUAÇÕES ---
+                // --- CORPO DA TELA (SingleChildScrollView) ---
                 Expanded(
-                  child: SingleChildScrollView(
+                  child: _carregando
+                      ? const Center(child: CircularProgressIndicator(color: AppTema.verde))
+                      : SingleChildScrollView(
                     padding: const EdgeInsets.all(24),
+                    physics: const BouncingScrollPhysics(),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+
+                        // SEÇÃO 1: PLACAR MULTIPLAYER (CÓDIGO ORIGINAL MANTIDO)[cite: 16]
                         ..._pontuacao.map((p) {
                           final nome = p['jogador'] as String;
                           final vitorias = p['vitorias'] as int;
@@ -224,19 +333,45 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
                         }),
 
                         if (_pontuacao.isEmpty)
-                          const Center(
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 40.0),
-                              child: Text(
-                                'Nenhuma partida jogada ainda!',
-                                style: TextStyle(
-                                  color: AppTema.neutroEsc,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 10.0, bottom: 20.0),
+                            child: Text(
+                              'Nenhuma partida jogada ainda!',
+                              style: TextStyle(
+                                color: AppTema.neutroEsc,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
                               ),
+                              textAlign: TextAlign.center,
                             ),
                           ),
+
+                        const SizedBox(height: 16),
+                        const Divider(color: Colors.black26, thickness: 2),
+                        const SizedBox(height: 16),
+
+                        // SEÇÃO 2: PROGRESSO DAS CONQUISTAS (NOVO HUB EVOLUTIVO)
+                        const Text(
+                          'Suas Conquistas',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900,
+                              color: AppTema.texto
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+
+                        _buildCardEvolutivo('Animais', ['Observador de Pássaros', 'Domador de Feras', 'Rei da Selva']),
+                        _buildCardEvolutivo('Comidas e Bebidas', ['Degustador Curioso', 'Crítico Gastronômico', 'Chef Estrela Michelin']),
+                        _buildCardEvolutivo('Contos de Fada', ['Era uma Vez', 'Nobre Cavaleiro', 'Guardião do Reino']),
+                        _buildCardEvolutivo('Esportes', ['Reserva do Time', 'Titular Absoluto', 'Lenda Olímpica']),
+                        _buildCardEvolutivo('Filmes e Séries', ['Espectador de Pipoca', 'Crítico de Cinema', 'Cineasta Premiado']),
+                        _buildCardEvolutivo('Mitologia', ['Iniciado do Oráculo', 'Herói Lendário', 'Divindade Suprema']),
+                        _buildCardEvolutivo('Música', ['Ouvinte de Rádio', 'Músico de Coreto', 'Virtuoso da Orquestra']),
+                        _buildCardEvolutivo('Música - Cantores', ['Fã de Carteirinha', 'Astro do Palco', 'Ícone Global']),
+                        _buildCardEvolutivo('Paises', ['Turista Local', 'Viajante de Elite', 'Cidadão do Mundo']),
+                        _buildCardEvolutivo('Tecnologia', ['Hello World!', 'Arquiteto de Sistemas', 'Mestre do Código']),
                       ],
                     ),
                   ),
@@ -250,6 +385,7 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
   }
 }
 
+// Widget auxiliar mantido exatamente igual[cite: 16]
 class _Stat extends StatelessWidget {
   final String valor;
   final String label;
@@ -269,8 +405,8 @@ class _Stat extends StatelessWidget {
           label,
           style: const TextStyle(
             fontSize: 12,
-            fontWeight: FontWeight.w900, // Fonte mais grossa para destacar
-            color: Colors.black,         // Cor alterada para preto sólido
+            fontWeight: FontWeight.w900,
+            color: Colors.black,
           ),
         ),
       ],

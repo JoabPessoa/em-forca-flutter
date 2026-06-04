@@ -1,7 +1,7 @@
 name: jogo_forca
 description: Jogo da Forca - App Mobile com Flutter
 publish_to: 'none'
-version: 1.0.0+16
+version: 1.0.0+18
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -11,7 +11,7 @@ dependencies:
     sdk: flutter
   sqflite: ^2.3.0          # Banco de dados SQLite local
   path: ^1.8.3              # Para localizar o banco no dispositivo
-  google_fonts: ^6.1.0      # Fontes bonitas
+  google_fonts: ^6.1.0      # Fontes 
   flutter_animate: ^4.3.0   # Animações suaves
   audioplayers: ^5.2.1
   games_services: ^4.0.0

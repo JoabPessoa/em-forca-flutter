@@ -4,6 +4,8 @@ import '../database/database_helper.dart';
 import '../theme/app_tema.dart';
 import '../audio_manager.dart';
 import 'tela_jogo.dart';
+import '../core/services/play_games_helper.dart';
+import '../core/constants/achievements_ids.dart';
 
 class TelaPersonalizacao extends StatefulWidget {
   final bool modoMultiplayer;
@@ -98,6 +100,9 @@ class _TelaPersonalizacaoState extends State<TelaPersonalizacao> {
 
   void _iniciarJogo() {
     if (_categoriasSelecionadas.isEmpty) {
+      // Gatilho da Nova Conquista Secreta!
+      PlayGamesHelper.desbloquearConquista(AchievementIds.semPaciencia);
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Selecione pelo menos uma categoria!', style: TextStyle(fontWeight: FontWeight.bold)),

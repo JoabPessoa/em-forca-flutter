@@ -28,7 +28,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 9, // <-- Versão atualizada para criar a nova tabela
+      version: 11, // <-- Versão atualizada para criar a nova tabela
       onCreate: _criarTabelas,
       onUpgrade: (db, oldVersion, newVersion) async {
         await db.execute('DROP TABLE IF EXISTS palavras');
@@ -565,7 +565,6 @@ class DatabaseHelper {
       {'texto': 'INGLATERRA', 'dica': 'Nação do Reino Unido conhecida pela monarquia e pelo relógio Big Ben', 'categoria': 'Paises', 'dificuldade': 'facil'},
       {'texto': 'COLOMBIA', 'dica': 'País sul-americano famoso pela exportação de café e pelas esmeraldas', 'categoria': 'Paises', 'dificuldade': 'facil'},
       {'texto': 'COREIA DO SUL', 'dica': 'Nação asiática famosa pela tecnologia e pelo fenômeno cultural do K-pop', 'categoria': 'Paises', 'dificuldade': 'facil'},
-
       {'texto': 'MARROCOS', 'dica': 'País africano famoso por seus desertos, mercados e a cidade de Marraquexe', 'categoria': 'Paises', 'dificuldade': 'medio'},
       {'texto': 'IRA', 'dica': 'País do Oriente Médio antigo berço do Império Persa', 'categoria': 'Paises', 'dificuldade': 'medio'},
       {'texto': 'VIETNA', 'dica': 'País do sudeste asiático conhecido por suas baías de águas verdes e história de guerra', 'categoria': 'Paises', 'dificuldade': 'medio'},
@@ -576,7 +575,6 @@ class DatabaseHelper {
       {'texto': 'AUSTRIA', 'dica': 'País europeu onde nasceu Mozart e famoso por sua música clássica', 'categoria': 'Paises', 'dificuldade': 'medio'},
       {'texto': 'CUBA', 'dica': 'Ilha caribenha famosa por seus carros antigos e charutos feitos à mão', 'categoria': 'Paises', 'dificuldade': 'medio'},
       {'texto': 'POLONIA', 'dica': 'País europeu onde viveu o Papa João Paulo II e o pianista Chopin', 'categoria': 'Paises', 'dificuldade': 'medio'},
-
       {'texto': 'NOVA ZELANDIA', 'dica': 'País da Oceania onde foram filmadas as trilogias de O Senhor dos Anéis', 'categoria': 'Paises', 'dificuldade': 'dificil'},
       {'texto': 'SINGAPURA', 'dica': 'Cidade-estado asiática extremamente moderna e conhecida por sua limpeza rigorosa', 'categoria': 'Paises', 'dificuldade': 'dificil'},
       {'texto': 'ETIOPIA', 'dica': 'País africano considerado o berço da humanidade e do café', 'categoria': 'Paises', 'dificuldade': 'dificil'},
@@ -587,7 +585,6 @@ class DatabaseHelper {
       {'texto': 'LIBANO', 'dica': 'País do Oriente Médio representado pela árvore cedro em sua bandeira', 'categoria': 'Paises', 'dificuldade': 'dificil'},
       {'texto': 'MALDIVAS', 'dica': 'País insular no Oceano Índico famoso por seus resorts de luxo sobre a água', 'categoria': 'Paises', 'dificuldade': 'dificil'},
       {'texto': 'MONACO', 'dica': 'O segundo menor país do mundo, famoso pelo Grande Prêmio de Fórmula 1', 'categoria': 'Paises', 'dificuldade': 'dificil'},
-
       {'texto': 'BRASIL', 'dica': 'O único país pentacampeão mundial de futebol e maior da América Latina', 'categoria': 'Paises', 'dificuldade': 'facil'},
       {'texto': 'JAPAO', 'dica': 'Arquipélago asiático conhecido como a Terra do Sol Nascente', 'categoria': 'Paises', 'dificuldade': 'facil'},
       {'texto': 'FRANCA', 'dica': 'Nação europeia famosa pela Torre Eiffel e pela gastronomia refinada', 'categoria': 'Paises', 'dificuldade': 'facil'},
@@ -597,7 +594,6 @@ class DatabaseHelper {
       {'texto': 'ARGENTINA', 'dica': 'País sul-americano conhecido pelo tango e por ser o berço de Messi', 'categoria': 'Paises', 'dificuldade': 'facil'},
       {'texto': 'CANADA', 'dica': 'O segundo maior país em extensão territorial, representado pela folha de bordo', 'categoria': 'Paises', 'dificuldade': 'facil'},
       {'texto': 'MEXICO', 'dica': 'País da América do Norte famoso pelos seus tacos e civilizações astecas', 'categoria': 'Paises', 'dificuldade': 'facil'},
-
       {'texto': 'AUSTRALIA', 'dica': 'País continental famoso por seus cangurus e pela Grande Barreira de Corais', 'categoria': 'Paises', 'dificuldade': 'medio'},
       {'texto': 'TURQUIA', 'dica': 'Nação que une a Europa e a Ásia, famosa pela cidade de Istambul', 'categoria': 'Paises', 'dificuldade': 'medio'},
       {'texto': 'NORUEGA', 'dica': 'País escandinavo conhecido por seus fiordes e pela Aurora Boreal', 'categoria': 'Paises', 'dificuldade': 'medio'},
@@ -608,7 +604,6 @@ class DatabaseHelper {
       {'texto': 'CHILE', 'dica': 'País longo e estreito na América do Sul, lar da Cordilheira dos Andes', 'categoria': 'Paises', 'dificuldade': 'medio'},
       {'texto': 'SUECIA', 'dica': 'País nórdico conhecido por marcas como Volvo, IKEA e a banda ABBA', 'categoria': 'Paises', 'dificuldade': 'medio'},
       {'texto': 'EGITO', 'dica': 'País africano que abriga a única das Sete Maravilhas do Mundo Antigo que resta', 'categoria': 'Paises', 'dificuldade': 'medio'},
-
       {'texto': 'MADAGASCAR', 'dica': 'Grande ilha africana no Oceano Índico com fauna e flora únicas', 'categoria': 'Paises', 'dificuldade': 'dificil'},
       {'texto': 'LUXEMBURGO', 'dica': 'Um dos menores países da Europa, situado entre a Bélgica, França e Alemanha', 'categoria': 'Paises', 'dificuldade': 'dificil'},
       {'texto': 'INDONESIA', 'dica': 'O maior arquipélago do mundo, composto por mais de 17 mil ilhas', 'categoria': 'Paises', 'dificuldade': 'dificil'},

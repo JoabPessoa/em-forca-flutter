@@ -80,4 +80,5 @@ class AchievementIds {
   static const String uauInesperado = "CgkI4_HrjP8BEAIQCA";
   static const String lacrianeLacradora = "CgkI4_HrjP8BEAIQJA";
   static const String coordenadasSecretas = "CgkI4_HrjP8BEAIQHg"; // -6.82778 -35.75778
+  static const String semPaciencia = "CgkI4_HrjP8BEAIQMQ"; // Se não quiser jogar, feche o jogo, ué
 }
