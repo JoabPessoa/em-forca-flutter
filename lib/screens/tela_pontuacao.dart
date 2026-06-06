@@ -29,7 +29,6 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
     final db = DatabaseHelper.instance;
     final p = await db.buscarPontuacao();
 
-    // Carrega o progresso de cada categoria (acertos)
     final categorias = [
       'Animais', 'Comidas e Bebidas', 'Contos de Fada', 'Esportes',
       'Filmes e Séries', 'Mitologia', 'Música', 'Música - Cantores', 'Paises', 'Tecnologia'
@@ -49,7 +48,6 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
     }
   }
 
-  // Novo pop-up de reset customizado com o papel amassado[cite: 16]
   Future<void> _resetar() async {
     final confirmar = await showDialog<bool>(
       context: context,
@@ -70,13 +68,13 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
             children: [
               const Text(
                 'Resetar Placar?',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: AppTema.texto),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: AppTema.texto),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
               const Text(
-                'Isso vai zerar todas as pontuações.',
-                style: TextStyle(color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w600),
+                'Isso vai zerar as pontuações (não afeta suas conquistas).',
+                style: TextStyle(color: Colors.black54, fontSize: 12, fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
@@ -85,11 +83,11 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
                 children: [
                   GestureDetector(
                     onTap: () => Navigator.pop(context, false),
-                    child: const Text('Cancelar', style: TextStyle(color: AppTema.azul, fontWeight: FontWeight.w900, fontSize: 18)),
+                    child: const Text('Cancelar', style: TextStyle(color: AppTema.azul, fontWeight: FontWeight.w900, fontSize: 15)),
                   ),
                   GestureDetector(
                     onTap: () => Navigator.pop(context, true),
-                    child: const Text('Resetar', style: TextStyle(color: AppTema.vermelho, fontWeight: FontWeight.w900, fontSize: 18)),
+                    child: const Text('Resetar', style: TextStyle(color: AppTema.vermelho, fontWeight: FontWeight.w900, fontSize: 15)),
                   ),
                 ],
               ),
@@ -107,7 +105,7 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
     }
   }
 
-  // Constrói visualmente um cartão de conquista evolutiva que ocupa pouco espaço
+  // --- NOVO DESIGN DO CARD EVOLUTIVO ---
   Widget _buildCardEvolutivo(String tituloCategoria, List<String> titulosNiveis) {
     int progressoAtual = _estatisticas[tituloCategoria] ?? 0;
 
@@ -116,7 +114,7 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
     double porcentagem;
     bool concluido = false;
 
-    // Escada de evolução: 10 -> 25 -> 50
+    // Lógica evolutiva (10 -> 25 -> 50)
     if (progressoAtual < 10) {
       meta = 10;
       tituloAtual = titulosNiveis[0];
@@ -139,49 +137,80 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: concluido ? AppTema.verde.withOpacity(0.1) : Colors.white.withOpacity(0.9),
+        // Fundo cinza com transparência alta ou verde se concluído
+        color: concluido ? AppTema.verde.withOpacity(0.15) : Colors.grey.withOpacity(0.15),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: concluido ? AppTema.verde : AppTema.texto.withOpacity(0.2), width: 2),
+        border: Border.all(color: concluido ? AppTema.verde : Colors.transparent, width: 2),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                tituloAtual,
-                style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: AppTema.texto),
-              ),
-              if (concluido)
-                const Icon(Icons.star_rounded, color: Colors.amber, size: 28),
-            ],
+          // 1. ÍCONE DA CONQUISTA
+          Container(
+            width: 60,
+            height: 60,
+            margin: const EdgeInsets.only(right: 16),
+            child: Image.asset(
+              // O Flutter vai procurar uma imagem com o nome EXATO do título atual
+              'assets/images/$tituloAtual.png',
+              fit: BoxFit.contain,
+              // Fallback de Segurança: Se a imagem não for encontrada, mostra o troféu genérico
+              errorBuilder: (context, error, stackTrace) {
+                return Image.asset(
+                  'assets/images/ic_vitoria.png',
+                  fit: BoxFit.contain,
+                  color: concluido ? null : Colors.grey.withOpacity(0.5), // Fica cinza se não concluído
+                );
+              },
+            ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            'Encontre e acerte palavras de $tituloCategoria.',
-            style: const TextStyle(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: LinearProgressIndicator(
-                    value: porcentagem,
-                    minHeight: 10,
-                    backgroundColor: Colors.grey[200],
-                    color: concluido ? AppTema.verde : AppTema.azul,
-                  ),
+
+          // 2. TEXTOS E BARRA DE PROGRESSO
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        tituloAtual,
+                        style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16, color: AppTema.texto),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    if (concluido)
+                      const Icon(Icons.star_rounded, color: Colors.amber, size: 24),
+                  ],
                 ),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                '$progressoAtual / $meta',
-                style: const TextStyle(fontWeight: FontWeight.w900, color: AppTema.texto),
-              ),
-            ],
+                const SizedBox(height: 4),
+                Text(
+                  'Encontre e acerte palavras de $tituloCategoria.',
+                  style: const TextStyle(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: LinearProgressIndicator(
+                          value: porcentagem,
+                          minHeight: 10,
+                          backgroundColor: Colors.grey[300],
+                          color: concluido ? AppTema.verde : AppTema.azul,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      '$progressoAtual / $meta',
+                      style: const TextStyle(fontWeight: FontWeight.w900, color: AppTema.texto),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -202,17 +231,13 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 1. FUNDO DO QUADRO BRANCO[cite: 16]
           Image.asset(
             'assets/images/bg_quadro_branco.jpg',
             fit: BoxFit.cover,
           ),
-
-          // 2. CONTEÚDO
           SafeArea(
             child: Column(
               children: [
-                // --- CABEÇALHO CUSTOMIZADO ---[cite: 16]
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
                   child: Row(
@@ -244,7 +269,6 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
                   ),
                 ),
 
-                // --- CORPO DA TELA (SingleChildScrollView) ---
                 Expanded(
                   child: _carregando
                       ? const Center(child: CircularProgressIndicator(color: AppTema.verde))
@@ -254,8 +278,7 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-
-                        // SEÇÃO 1: PLACAR MULTIPLAYER (CÓDIGO ORIGINAL MANTIDO)[cite: 16]
+                        // --- PLACAR MULTIPLAYER ---
                         ..._pontuacao.map((p) {
                           final nome = p['jogador'] as String;
                           final vitorias = p['vitorias'] as int;
@@ -350,7 +373,7 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
                         const Divider(color: Colors.black26, thickness: 2),
                         const SizedBox(height: 16),
 
-                        // SEÇÃO 2: PROGRESSO DAS CONQUISTAS (NOVO HUB EVOLUTIVO)
+                        // --- HUB DE CONQUISTAS ---
                         const Text(
                           'Suas Conquistas',
                           style: TextStyle(
@@ -385,7 +408,6 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
   }
 }
 
-// Widget auxiliar mantido exatamente igual[cite: 16]
 class _Stat extends StatelessWidget {
   final String valor;
   final String label;
