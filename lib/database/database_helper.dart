@@ -28,7 +28,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 11, // <-- Versão atualizada para criar a nova tabela
+      version: 12, // <-- Versão atualizada para criar a nova tabela
       onCreate: _criarTabelas,
       onUpgrade: (db, oldVersion, newVersion) async {
         await db.execute('DROP TABLE IF EXISTS palavras');
@@ -129,9 +129,21 @@ class DatabaseHelper {
       {'texto': 'JOKER', 'dica': 'Nome em ingles do vilao que ganhou filme proprio em 2019', 'categoria': 'Filmes e Séries', 'dificuldade': 'medio'},
       {'texto': 'RICK AND MORTY', 'dica': 'Serie animada sobre um cientista genio e seu neto em viagens espaciais', 'categoria': 'Filmes e Séries', 'dificuldade': 'medio'},
       {'texto': 'FROZEN', 'dica': 'Filme de animacao com duas irmas e um boneco de neve que fala', 'categoria': 'Filmes e Séries', 'dificuldade': 'facil'},
+      {'texto': 'MODERN FAMILY', 'dica': 'Sitcom gravada em formato de falso documentário sobre três núcleos de uma família', 'categoria': 'Filmes e Séries', 'dificuldade': 'facil'},
+      {'texto': 'THE BIG BANG THEORY', 'dica': 'Sitcom sobre um grupo de cientistas nerds e sua vizinha Penny', 'categoria': 'Filmes e Séries', 'dificuldade': 'facil'},
+      {'texto': 'UM MALUCO NO PEDACO', 'dica': 'Sitcom dos anos 90 que lançou Will Smith ao estrelato na TV', 'categoria': 'Filmes e Séries', 'dificuldade': 'facil'},
+      {'texto': 'MINHA MAE E UMA PECA', 'dica': 'Franquia de comédia nacional baseada na icônica Dona Hermínia', 'categoria': 'Filmes e Séries', 'dificuldade': 'facil'},
+      {'texto': 'HOW I MET YOUR MOTHER', 'dica': 'Sitcom onde o protagonista narra aos filhos a história de como conheceu a mãe deles', 'categoria': 'Filmes e Séries', 'dificuldade': 'medio'},
+      {'texto': 'DOIS HOMENS E MEIO', 'dica': 'Sitcom sobre a vida de um solteirão rico, seu irmão certinho e o sobrinho', 'categoria': 'Filmes e Séries', 'dificuldade': 'medio'},
+      {'texto': 'EU A PATROA E AS CRIANCAS', 'dica': 'Sitcom muito famosa no Brasil focada na divertida família Kyle', 'categoria': 'Filmes e Séries', 'dificuldade': 'medio'},
+      {'texto': 'COMMUNITY', 'dica': 'Sitcom sobre um grupo de estudo bizarro em uma faculdade comunitária', 'categoria': 'Filmes e Séries', 'dificuldade': 'medio'},
+      {'texto': 'A GRANDE FAMILIA', 'dica': 'A mais famosa e duradoura sitcom da televisão brasileira', 'categoria': 'Filmes e Séries', 'dificuldade': 'medio'},
+      {'texto': 'SEINFELD', 'dica': 'Considerada uma das maiores sitcoms da história, famosa por ser uma série sobre o nada', 'categoria': 'Filmes e Séries', 'dificuldade': 'dificil'},
+      {'texto': 'PARKS AND RECREATION', 'dica': 'Sitcom de escritório focada nos funcionários públicos do departamento de parques', 'categoria': 'Filmes e Séries', 'dificuldade': 'dificil'},
 
       // --- ESPORTES ---
       // 50 palavras
+      {'texto': 'CORRIDA', 'dica': 'Esporte ou atividade de pedestrianismo onde o objetivo é correr o mais rápido possível', 'categoria': 'Esportes', 'dificuldade': 'facil'},
       {'texto': 'FUTEBOL', 'dica': 'Esporte mais popular do Brasil', 'categoria': 'Esportes', 'dificuldade': 'facil'},
       {'texto': 'BASQUETE', 'dica': 'Esporte com cesta e bola laranja', 'categoria': 'Esportes', 'dificuldade': 'medio'},
       {'texto': 'NATACAO', 'dica': 'Esporte praticado dentro da água', 'categoria': 'Esportes', 'dificuldade': 'medio'},
@@ -174,7 +186,7 @@ class DatabaseHelper {
       {'texto': 'XADREZ', 'dica': 'Considerado um esporte da mente jogado em um tabuleiro', 'categoria': 'Esportes', 'dificuldade': 'facil'},
       {'texto': 'CROSSFIT', 'dica': 'Treinamento de alta intensidade que mistura varios exercicios', 'categoria': 'Esportes', 'dificuldade': 'medio'},
       {'texto': 'RAFTING', 'dica': 'Descida em corredeiras de rios usando botes inflaveis', 'categoria': 'Esportes', 'dificuldade': 'medio'},
-      {'texto': 'TRICATLO', 'dica': 'Prova que combina natacao, ciclismo e corrida', 'categoria': 'Esportes', 'dificuldade': 'dificil'},
+      {'texto': 'TRIATLO', 'dica': 'Prova que combina natacao, ciclismo e corrida', 'categoria': 'Esportes', 'dificuldade': 'dificil'},
       {'texto': 'SUMO', 'dica': 'Luta tradicional japonesa onde competidores pesados se empurram', 'categoria': 'Esportes', 'dificuldade': 'facil'},
       {'texto': 'BOLICHE', 'dica': 'Jogo cujo objetivo e derrubar dez pinos com uma bola pesada', 'categoria': 'Esportes', 'dificuldade': 'facil'},
       {'texto': 'CAPOEIRA', 'dica': 'Expressao cultural brasileira que mistura luta, danca e musica', 'categoria': 'Esportes', 'dificuldade': 'facil'},
@@ -261,7 +273,7 @@ class DatabaseHelper {
       {'texto': 'MOQUECA', 'dica': 'Prato brasileiro feito com peixe e temperos', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'medio'},
       {'texto': 'PAMONHA', 'dica': 'Comida feita de milho verde, doce ou salgada', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'medio'},
       {'texto': 'CANJICA', 'dica': 'Doce típico de festas juninas feito com milho', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'medio'},
-      {'texto': 'HOT DOG', 'dica': 'Lanche feito com pão e salsicha', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'facil'},
+      {'texto': 'CACHORRO QUENTE', 'dica': 'Lanche feito com pão e salsicha', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'facil'},
       {'texto': 'BATATA FRITA', 'dica': 'Acompanhamento crocante muito comum em lanchonetes', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'facil'},
       {'texto': 'PANQUECA', 'dica': 'Massa fina recheada, doce ou salgada', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'medio'},
       {'texto': 'TACOS', 'dica': 'Comida mexicana feita com tortilha e recheio', 'categoria': 'Comidas e Bebidas', 'dificuldade': 'medio'},

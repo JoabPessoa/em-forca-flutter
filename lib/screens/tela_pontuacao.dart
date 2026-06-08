@@ -74,7 +74,7 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
               const SizedBox(height: 16),
               const Text(
                 'Isso vai zerar as pontuações (não afeta suas conquistas).',
-                style: TextStyle(color: Colors.black54, fontSize: 12, fontWeight: FontWeight.w600),
+                style: TextStyle(color: Colors.black54, fontSize: 13, fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
