@@ -75,10 +75,21 @@ class AchievementIds {
   static const String mestreCodigo = "CgkI4_HrjP8BEAIQGQ";      // 100 partidas
 
   // ==========================================
-  // EASTER EGGS
+  // EASTER EGGS ORIGINAIS
   // ==========================================
   static const String uauInesperado = "CgkI4_HrjP8BEAIQCA";
   static const String lacrianeLacradora = "CgkI4_HrjP8BEAIQJA";
   static const String coordenadasSecretas = "CgkI4_HrjP8BEAIQHg"; // -6.82778 -35.75778
   static const String semPaciencia = "CgkI4_HrjP8BEAIQMQ"; // Se não quiser jogar, feche o jogo, ué
+
+  // ==========================================
+  // CONQUISTAS SECRETAS DE COMBINAÇÃO
+  // ==========================================
+  static const String achTriatlo = "CgkI4_HrjP8BEAIQMw";
+  static const String achZoologo = "CgkI4_HrjP8BEAIQNQ";
+  static const String achFullstack = "CgkI4_HrjP8BEAIQNg";
+  static const String achDeuses = "CgkI4_HrjP8BEAIQNw";
+  static const String achInfantil = "CgkI4_HrjP8BEAIQOA";
+  static const String achNerd = "CgkI4_HrjP8BEAIQOQ";
+  static const String achSitcons = "CgkI4_HrjP8BEAIQNA";
 }

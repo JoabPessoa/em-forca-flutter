@@ -23,9 +23,10 @@ class AchievementsManager {
     _validarModosDeJogo(categoriasSelecionadas, modoMultiplayer);
     _validarEasterEggs(palavraTexto);
 
-    // Avalia as conquistas evolutivas apenas se o jogador acertou a palavra
+    // Avalia as conquistas evolutivas e secretas apenas se o jogador acertou a palavra
     if (venceu) {
       _validarCategoriasEvolutivas(categoriaJogada, palavrasAcertadasCategoria);
+      await _validarConquistasSecretas(palavraTexto); // <-- NOVA CHAMADA
     }
   }
 
@@ -113,6 +114,47 @@ class AchievementsManager {
         if (acertos >= 25) PlayGamesHelper.desbloquearConquista(AchievementIds.arquitetoSistemas);
         if (acertos >= 50) PlayGamesHelper.desbloquearConquista(AchievementIds.mestreCodigo);
         break;
+    }
+  }
+  static Future<void> _validarConquistasSecretas(String palavra) async {
+    final db = DatabaseHelper.instance;
+
+    // 1. Salva a palavra atual no histórico local
+    await db.registrarPalavraAcertada(palavra);
+
+    // 2. Dicionário com as combinações necessárias
+    final Map<String, List<String>> requisitos = {
+      AchievementIds.achTriatlo: ['CORRIDA', 'NATACAO', 'CICLISMO'],
+      AchievementIds.achZoologo: ['ORNITORRINCO', 'AXOLOTE', 'PANGOLIM', 'NARVAL'],
+      AchievementIds.achFullstack: ['HTML', 'CSS', 'JAVASCRIPT', 'BANCO DE DADOS'],
+      AchievementIds.achDeuses: ['ZEUS', 'POSEIDON', 'HADES'],
+      AchievementIds.achInfantil: ['PIZZA', 'BRIGADEIRO', 'COXINHA', 'CACHORRO QUENTE', 'BATATA FRITA', 'BOLO'],
+      AchievementIds.achNerd: ['HOMEM ARANHA', 'BATMAN', 'THE FLASH', 'SUPERMAN'],
+      AchievementIds.achSitcons: [
+        'FRIENDS', 'MODERN FAMILY', 'THE BIG BANG THEORY', 'UM MALUCO NO PEDACO',
+        'HOW I MET YOUR MOTHER', 'DOIS HOMENS E MEIO', 'EU A PATROA E AS CRIANCAS',
+        'COMMUNITY', 'A GRANDE FAMILIA', 'SEINFELD', 'PARKS AND RECREATION'
+      ],
+    };
+
+    // 3. Avalia todas as conquistas do dicionário
+    for (var entry in requisitos.entries) {
+      String idConquista = entry.key;
+      List<String> palavrasNecessarias = entry.value;
+
+      // Se a conquista já foi obtida antes, pula para a próxima (otimização)
+      bool jaDesbloqueada = await db.conquistaJaDesbloqueada(idConquista);
+      if (jaDesbloqueada) continue;
+
+      // Verifica no banco se o jogador já tem o "checklist" completo
+      bool cumpriuRequisitos = await db.verificouTodasPalavras(palavrasNecessarias);
+
+      if (cumpriuRequisitos) {
+        // Desbloqueia no Google Play
+        PlayGamesHelper.desbloquearConquista(idConquista);
+        // Marca no banco local para nunca mais verificar
+        await db.registrarConquistaLocal(idConquista);
+      }
     }
   }
 }

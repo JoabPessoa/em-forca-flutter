@@ -28,7 +28,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 12, // <-- Versão atualizada para criar a nova tabela
+      version: 14, // <-- Versão atualizada para criar a nova tabela
       onCreate: _criarTabelas,
       onUpgrade: (db, oldVersion, newVersion) async {
         await db.execute('DROP TABLE IF EXISTS palavras');
@@ -146,7 +146,7 @@ class DatabaseHelper {
       {'texto': 'CORRIDA', 'dica': 'Esporte ou atividade de pedestrianismo onde o objetivo é correr o mais rápido possível', 'categoria': 'Esportes', 'dificuldade': 'facil'},
       {'texto': 'FUTEBOL', 'dica': 'Esporte mais popular do Brasil', 'categoria': 'Esportes', 'dificuldade': 'facil'},
       {'texto': 'BASQUETE', 'dica': 'Esporte com cesta e bola laranja', 'categoria': 'Esportes', 'dificuldade': 'medio'},
-      {'texto': 'NATACAO', 'dica': 'Esporte praticado dentro da água', 'categoria': 'Esportes', 'dificuldade': 'medio'},
+      {'texto': 'NATACAO', 'dica': 'Esporte praticado dentro da água', 'categoria': 'Esportes', 'dificuldade': 'facil'},
       {'texto': 'OLIMPIADAS', 'dica': 'Maior evento esportivo do mundo', 'categoria': 'Esportes', 'dificuldade': 'dificil'},
       {'texto': 'TENIS', 'dica': 'Esporte com raquete e rede', 'categoria': 'Esportes', 'dificuldade': 'facil'},
       {'texto': 'VOLEIBOL', 'dica': 'Esporte onde não pode deixar a bola cair', 'categoria': 'Esportes', 'dificuldade': 'medio'},
@@ -769,4 +769,36 @@ class DatabaseHelper {
 
     return await buscarEstatistica(nomeEstatistica);
   }
+  // ============================================================
+  // MÉTODOS PARA O SISTEMA DE CONQUISTAS COMBINADAS
+  // ============================================================
+
+  /// Registra que o jogador acertou uma palavra específica.
+  Future<void> registrarPalavraAcertada(String palavra) async {
+    final palavraFormatada = palavra.toUpperCase().trim();
+    await incrementarEstatistica('palavra_$palavraFormatada');
+  }
+
+  /// Verifica se TODAS as palavras de uma lista já foram acertadas pelo menos uma vez.
+  Future<bool> verificouTodasPalavras(List<String> palavras) async {
+    for (String p in palavras) {
+      final count = await buscarEstatistica('palavra_${p.toUpperCase()}');
+      if (count == 0) {
+        return false; // Se faltar uma, interrompe e retorna falso
+      }
+    }
+    return true; // Acertou todas as palavras da lista
+  }
+
+  /// Marca uma conquista como desbloqueada localmente
+  Future<void> registrarConquistaLocal(String idConquista) async {
+    await incrementarEstatistica('conq_local_$idConquista');
+  }
+
+  /// Verifica se a conquista já foi disparada anteriormente para evitar repetição
+  Future<bool> conquistaJaDesbloqueada(String idConquista) async {
+    final count = await buscarEstatistica('conq_local_$idConquista');
+    return count > 0;
+  }
 }
+
