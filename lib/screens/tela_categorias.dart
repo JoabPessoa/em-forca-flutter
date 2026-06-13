@@ -225,7 +225,12 @@ class _TelaCategoriasState extends State<TelaCategorias> {
     if (categoria == 'Personalizada') {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => TelaPersonalizacao(modoMultiplayer: widget.modoMultiplayer)),
+        MaterialPageRoute(
+            builder: (_) => TelaPersonalizacao(
+              modoMultiplayer: widget.modoMultiplayer,
+              tipoMultiplayer: widget.tipoMultiplayer, //
+            )
+        ),
       );
       return;
     }

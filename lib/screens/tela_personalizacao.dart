@@ -9,8 +9,13 @@ import '../core/constants/achievements_ids.dart';
 
 class TelaPersonalizacao extends StatefulWidget {
   final bool modoMultiplayer;
+  final String tipoMultiplayer; // <-- NOVO PARÂMETRO
 
-  const TelaPersonalizacao({super.key, required this.modoMultiplayer});
+  const TelaPersonalizacao({
+    super.key,
+    required this.modoMultiplayer,
+    this.tipoMultiplayer = 'nenhum', // <-- VALOR PADRÃO
+  });
 
   @override
   State<TelaPersonalizacao> createState() => _TelaPersonalizacaoState();
@@ -32,7 +37,6 @@ class _TelaPersonalizacaoState extends State<TelaPersonalizacao> {
     final cats = await DatabaseHelper.instance.buscarCategorias();
     setState(() {
       _todasCategorias = cats;
-      // Por padrão, começa com todas selecionadas
       _categoriasSelecionadas.addAll(cats);
       _carregando = false;
     });
@@ -76,7 +80,6 @@ class _TelaPersonalizacaoState extends State<TelaPersonalizacao> {
       case 'Contos de Fada': return 'assets/images/btn_cat_d_fadas.png';
       case 'Paises': return 'assets/images/btn_cat_d_paises.png';
       case 'Música - Cantores': return 'assets/images/btn_cat_d_cantores.png';
-
       default: return 'assets/images/btn_cat_todas.png';
     }
   }
@@ -100,9 +103,7 @@ class _TelaPersonalizacaoState extends State<TelaPersonalizacao> {
 
   void _iniciarJogo() {
     if (_categoriasSelecionadas.isEmpty) {
-      // Gatilho da Nova Conquista Secreta!
       PlayGamesHelper.desbloquearConquista(AchievementIds.semPaciencia);
-
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Selecione pelo menos uma categoria!', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -114,6 +115,7 @@ class _TelaPersonalizacaoState extends State<TelaPersonalizacao> {
 
     AudioManager.instance.playClique();
     DatabaseHelper.instance.resetarMemoriaDePalavras();
+
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -122,6 +124,7 @@ class _TelaPersonalizacaoState extends State<TelaPersonalizacao> {
           modoJogo: _modoJogoSelecionado,
           modoMultiplayer: widget.modoMultiplayer,
           jogadorAtual: widget.modoMultiplayer ? 1 : 0,
+          tipoMultiplayer: widget.tipoMultiplayer, // <-- REPASSE DO BASTÃO PARA A TELA DE JOGO
         ),
       ),
     );
@@ -139,7 +142,6 @@ class _TelaPersonalizacaoState extends State<TelaPersonalizacao> {
                 ? const Center(child: CircularProgressIndicator(color: AppTema.verde))
                 : Column(
               children: [
-                // Header
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   child: Stack(
@@ -163,8 +165,6 @@ class _TelaPersonalizacaoState extends State<TelaPersonalizacao> {
                   ),
                 ),
                 const SizedBox(height: 10),
-
-                // Seletor de Dificuldade
                 const Text('Dificuldade:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: AppTema.texto)),
                 const SizedBox(height: 8),
                 Row(
@@ -177,8 +177,6 @@ class _TelaPersonalizacaoState extends State<TelaPersonalizacao> {
                   ],
                 ),
                 const SizedBox(height: 16),
-
-                // Botões Adicionar Tudo / Remover Tudo
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -199,8 +197,6 @@ class _TelaPersonalizacaoState extends State<TelaPersonalizacao> {
                   ],
                 ),
                 const SizedBox(height: 16),
-
-                // Lista de Categorias (Toggles)
                 Expanded(
                   child: ListView.separated(
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
@@ -229,8 +225,6 @@ class _TelaPersonalizacaoState extends State<TelaPersonalizacao> {
                     },
                   ),
                 ),
-
-                // Botão Jogar
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: GestureDetector(

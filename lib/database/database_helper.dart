@@ -28,20 +28,26 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 14, // <-- Versão atualizada para criar a nova tabela
+      version: 17, // <-- Nova versãobpara acionar a atualização
       onCreate: _criarTabelas,
       onUpgrade: (db, oldVersion, newVersion) async {
+        // A MÁGICA ACONTECE AQUI:
+        // Apagamos APENAS a tabela de palavras para atualizar o catálogo do jogo.
         await db.execute('DROP TABLE IF EXISTS palavras');
-        await db.execute('DROP TABLE IF EXISTS pontuacao');
-        await db.execute('DROP TABLE IF EXISTS estatisticas'); // <-- Adicionado
+
+        // ATENÇÃO: Nunca mais daremos DROP nas tabelas 'estatisticas' e 'pontuacao'!
+        // O progresso ficará intocável.
+
+        // Chama a recriação (que agora está protegida)
         await _criarTabelas(db, newVersion);
       },
     );
   }
 
   Future<void> _criarTabelas(Database db, int version) async {
+    // 1. Tabela de Palavras (Será recriada nas atualizações para receber palavras novas)
     await db.execute('''
-      CREATE TABLE palavras (
+      CREATE TABLE IF NOT EXISTS palavras (
         id          INTEGER PRIMARY KEY AUTOINCREMENT,
         texto       TEXT    NOT NULL,
         dica        TEXT    NOT NULL,
@@ -50,8 +56,9 @@ class DatabaseHelper {
       )
     ''');
 
+    // 2. Tabela de Pontuação Multiplayer (Protegida)
     await db.execute('''
-      CREATE TABLE pontuacao (
+      CREATE TABLE IF NOT EXISTS pontuacao (
         id          INTEGER PRIMARY KEY AUTOINCREMENT,
         jogador     TEXT    NOT NULL,
         vitorias    INTEGER NOT NULL DEFAULT 0,
@@ -59,18 +66,18 @@ class DatabaseHelper {
       )
     ''');
 
-    // <-- NOVO: Tabela para o perfil do usuário e conquistas
+    // 3. Tabela para o perfil do usuário e conquistas (Protegida)
     await db.execute('''
-      CREATE TABLE estatisticas (
+      CREATE TABLE IF NOT EXISTS estatisticas (
         id          INTEGER PRIMARY KEY AUTOINCREMENT,
         nome        TEXT    NOT NULL UNIQUE,
         valor       INTEGER NOT NULL DEFAULT 0
       )
     ''');
 
-    // Inicializando as estatísticas base
-    await db.insert('estatisticas', {'nome': 'total_partidas', 'valor': 0});
-    await db.insert('estatisticas', {'nome': 'sequencia_vitorias', 'valor': 0});
+    // Inicializando as estatísticas base protegendo contra duplicações na atualização
+    await db.insert('estatisticas', {'nome': 'total_partidas', 'valor': 0}, conflictAlgorithm: ConflictAlgorithm.ignore);
+    await db.insert('estatisticas', {'nome': 'sequencia_vitorias', 'valor': 0}, conflictAlgorithm: ConflictAlgorithm.ignore);
 
     await _popularBancoDados(db);
   }
@@ -504,7 +511,7 @@ class DatabaseHelper {
       {'texto': 'JASON', 'dica': 'Heroi grego lider dos Argonautas na busca pelo Velo de Ouro', 'categoria': 'Mitologia', 'dificuldade': 'dificil'},
       {'texto': 'MIDAS', 'dica': 'Rei mitologico que transformava tudo o que tocava em ouro', 'categoria': 'Mitologia', 'dificuldade': 'medio'},
       {'texto': 'ISIS', 'dica': 'Deusa egipcia da maternidade e da magia esposa de Osiris', 'categoria': 'Mitologia', 'dificuldade': 'medio'},
-      {'texto': 'SIRENA', 'dica': 'Criatura marinha que atraia os marinheiros com seu canto hipnotico', 'categoria': 'Mitologia', 'dificuldade': 'facil'},
+      {'texto': 'SEREIA', 'dica': 'Criatura marinha que atraia os marinheiros com seu canto hipnotico', 'categoria': 'Mitologia', 'dificuldade': 'facil'},
       {'texto': 'HEIMDALL', 'dica': 'Guardiao nordico da ponte Bifrost que vigiava a entrada de Asgard', 'categoria': 'Mitologia', 'dificuldade': 'dificil'},
       {'texto': 'HELENA DE TROIA', 'dica': 'Mulher cujo rapto foi o estopim para a grande guerra entre gregos e troianos', 'categoria': 'Mitologia', 'dificuldade': 'medio'},
       {'texto': 'ARTEMIS', 'dica': 'Deusa grega da caca, dos animais selvagens e da lua', 'categoria': 'Mitologia', 'dificuldade': 'medio'},
@@ -632,8 +639,12 @@ class DatabaseHelper {
       await db.insert('palavras', p);
     }
 
-    await db.insert('pontuacao', {'jogador': 'Jogador 1', 'vitorias': 0, 'derrotas': 0});
-    await db.insert('pontuacao', {'jogador': 'Jogador 2', 'vitorias': 0, 'derrotas': 0});
+    // Segurança para não duplicar os jogadores no Multiplayer a cada atualização
+    final listPontuacao = await db.query('pontuacao');
+    if (listPontuacao.isEmpty) {
+      await db.insert('pontuacao', {'jogador': 'Jogador 1', 'vitorias': 0, 'derrotas': 0});
+      await db.insert('pontuacao', {'jogador': 'Jogador 2', 'vitorias': 0, 'derrotas': 0});
+    }
   }
 
 // ============================================================
@@ -801,4 +812,3 @@ class DatabaseHelper {
     return count > 0;
   }
 }
-

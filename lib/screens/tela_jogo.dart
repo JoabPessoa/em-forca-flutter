@@ -266,9 +266,22 @@ class _TelaJogoState extends State<TelaJogo> {
     _jogadasNaRodada++;
     bool fimDeRodada = _jogadasNaRodada == 2;
 
+    // Descobre quem é o próximo para chamar pelo número
+    int proximoJogador = _jogadorAtual == 1 ? 2 : 1;
+
+    // Monta o título dinâmico com quebra de linha
+    String tituloDialogo;
+    if (fimDeRodada) {
+      tituloDialogo = 'Fim da Rodada $_rodadaAtual';
+    } else {
+      tituloDialogo = vitoria
+          ? 'J$_jogadorAtual Acertou!\nJ$proximoJogador pronto?'
+          : 'J$_jogadorAtual Errou!\nJ$proximoJogador pronto?';
+    }
+
     _mostrarDialogo(
         vitoria: vitoria,
-        tituloCustomizado: fimDeRodada ? 'Fim da Rodada $_rodadaAtual' : 'Pronto?',
+        tituloCustomizado: tituloDialogo,
         onAcaoBotao: () async {
           Navigator.pop(context);
           if (fimDeRodada) {
@@ -284,7 +297,7 @@ class _TelaJogoState extends State<TelaJogo> {
               _jogadorAtual = _jogadorQueAbriuARodada;
             });
           } else {
-            setState(() { _jogadorAtual = _jogadorAtual == 1 ? 2 : 1; });
+            setState(() { _jogadorAtual = proximoJogador; });
           }
 
           _mostrarAnimacaoTurno(_jogadorAtual);
