@@ -8,8 +8,9 @@ import 'tela_personalizacao.dart';
 
 class TelaCategorias extends StatefulWidget {
   final bool modoMultiplayer;
+  final String tipoMultiplayer;
 
-  const TelaCategorias({super.key, required this.modoMultiplayer});
+  const TelaCategorias({super.key, required this.modoMultiplayer,this.tipoMultiplayer = 'nenhum',});
 
   @override
   State<TelaCategorias> createState() => _TelaCategoriasState();
@@ -29,7 +30,6 @@ class _TelaCategoriasState extends State<TelaCategorias> {
   Future<void> _carregarCategorias() async {
     final cats = await DatabaseHelper.instance.buscarCategorias();
     setState(() {
-      // Aqui definimos a ordem exata: Personalizada no topo, Todas em seguida, e o resto depois!
       _categorias = ['Personalizada', 'Todas', ...cats];
       _carregando = false;
     });
@@ -38,9 +38,9 @@ class _TelaCategoriasState extends State<TelaCategorias> {
   String _getImagemCategoria(String categoriaNome) {
     switch (categoriaNome) {
       case 'Personalizada':
-        return 'assets/images/btn_cat_personalizada.png'; // A sua nova arte do lápis!
+        return 'assets/images/btn_cat_personalizada.png';
       case 'Todas':
-        return 'assets/images/btn_cat_todas.png'; // O botão de "Todas" de volta ao jogo!
+        return 'assets/images/btn_cat_todas.png';
       case 'Animais':
         return 'assets/images/btn_cat_animais.png';
       case 'Comidas e Bebidas':
@@ -230,7 +230,6 @@ class _TelaCategoriasState extends State<TelaCategorias> {
       return;
     }
 
-    // Se clicar em "Todas" ou numa categoria específica, o banco de dados vai receber a lista adequadamente.
     DatabaseHelper.instance.resetarMemoriaDePalavras();
     Navigator.push(
       context,
@@ -240,6 +239,7 @@ class _TelaCategoriasState extends State<TelaCategorias> {
           modoJogo: _modoJogoSelecionado,
           modoMultiplayer: widget.modoMultiplayer,
           jogadorAtual: widget.modoMultiplayer ? 1 : 0,
+          tipoMultiplayer: widget.tipoMultiplayer, // <-- A CORREÇÃO DE REPASSE ESTÁ AQUI
         ),
       ),
     );

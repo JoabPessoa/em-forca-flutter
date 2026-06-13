@@ -18,15 +18,21 @@ class AchievementsManager {
     int sequenciaVitorias = await db.buscarEstatistica('sequencia_vitorias');
     int palavrasAcertadasCategoria = await db.buscarEstatistica('cat_$categoriaJogada');
 
+    // NOVO: Contador específico para partidas Multiplayer
+    int totalMultiplayer = 0;
+    if (modoMultiplayer) {
+      totalMultiplayer = await db.incrementarEstatistica('total_multiplayer');
+    }
+
     _validarVolumeGeral(totalPartidas);
     _validarDesempenho(venceu, errosCometidos, modoJogo, sequenciaVitorias);
-    _validarModosDeJogo(categoriasSelecionadas, modoMultiplayer);
+    _validarModosDeJogo(categoriasSelecionadas, modoMultiplayer, totalMultiplayer); // Passando o novo contador
     _validarEasterEggs(palavraTexto);
 
     // Avalia as conquistas evolutivas e secretas apenas se o jogador acertou a palavra
     if (venceu) {
       _validarCategoriasEvolutivas(categoriaJogada, palavrasAcertadasCategoria);
-      await _validarConquistasSecretas(palavraTexto); // <-- NOVA CHAMADA
+      await _validarConquistasSecretas(palavraTexto);
     }
   }
 
@@ -44,14 +50,21 @@ class AchievementsManager {
     if (modoJogo == 'dificil') PlayGamesHelper.desbloquearConquista(AchievementIds.mestreDoMarcador);
   }
 
-  static void _validarModosDeJogo(List<String> categoriasSelecionadas, bool modoMultiplayer) {
+  // ATUALIZADO: Agora gerencia corretamente as partidas e o novo Modo Arquiteto
+  static void _validarModosDeJogo(List<String> categoriasSelecionadas, bool modoMultiplayer, int totalMultiplayer) {
     if (modoMultiplayer) {
-      PlayGamesHelper.desbloquearConquista(AchievementIds.dueloDePilotos);
-      PlayGamesHelper.desbloquearConquista(AchievementIds.divisoriaNoQuadro);
+      PlayGamesHelper.desbloquearConquista(AchievementIds.divisoriaNoQuadro); // 1ª Partida
+
+      // Só desbloqueia quando o banco registrar 10 partidas multiplayer
+      if (totalMultiplayer >= 10) {
+        PlayGamesHelper.desbloquearConquista(AchievementIds.dueloDePilotos);
+      }
     }
+
     if (categoriasSelecionadas.contains('Todas') && categoriasSelecionadas.length == 1) {
       PlayGamesHelper.desbloquearConquista(AchievementIds.conhecimentoGeral);
-    } else if (categoriasSelecionadas.length > 1 && !categoriasSelecionadas.contains('Todas')) {
+    } else if ((categoriasSelecionadas.length > 1 && !categoriasSelecionadas.contains('Todas')) || categoriasSelecionadas.contains('Modo Arquiteto')) {
+      // O jogador ganha a conquista se selecionar várias categorias OU se jogar o Modo Arquiteto!
       PlayGamesHelper.desbloquearConquista(AchievementIds.arquitetoDaForca);
     }
   }
@@ -116,13 +129,12 @@ class AchievementsManager {
         break;
     }
   }
+
   static Future<void> _validarConquistasSecretas(String palavra) async {
     final db = DatabaseHelper.instance;
 
-    // 1. Salva a palavra atual no histórico local
     await db.registrarPalavraAcertada(palavra);
 
-    // 2. Dicionário com as combinações necessárias
     final Map<String, List<String>> requisitos = {
       AchievementIds.achTriatlo: ['CORRIDA', 'NATACAO', 'CICLISMO'],
       AchievementIds.achZoologo: ['ORNITORRINCO', 'AXOLOTE', 'PANGOLIM', 'NARVAL'],
@@ -137,22 +149,17 @@ class AchievementsManager {
       ],
     };
 
-    // 3. Avalia todas as conquistas do dicionário
     for (var entry in requisitos.entries) {
       String idConquista = entry.key;
       List<String> palavrasNecessarias = entry.value;
 
-      // Se a conquista já foi obtida antes, pula para a próxima (otimização)
       bool jaDesbloqueada = await db.conquistaJaDesbloqueada(idConquista);
       if (jaDesbloqueada) continue;
 
-      // Verifica no banco se o jogador já tem o "checklist" completo
       bool cumpriuRequisitos = await db.verificouTodasPalavras(palavrasNecessarias);
 
       if (cumpriuRequisitos) {
-        // Desbloqueia no Google Play
         PlayGamesHelper.desbloquearConquista(idConquista);
-        // Marca no banco local para nunca mais verificar
         await db.registrarConquistaLocal(idConquista);
       }
     }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jogo_forca/screens/tela_categorias.dart';
 import 'package:jogo_forca/screens/tela_pontuacao.dart';
+import 'package:jogo_forca/screens/tela_selecao_multiplayer.dart'; // <-- NÃO ESQUEÇA ESTE IMPORT
 import '../audio_manager.dart';
 import '../core/services/play_games_helper.dart';
 import '../theme/app_tema.dart';
@@ -14,14 +15,12 @@ class TelaInicial extends StatefulWidget {
 
 class _TelaInicialState extends State<TelaInicial> {
 
-
   @override
   void initState() {
     super.initState();
     PlayGamesHelper.iniciarLogin();
     // Inicia a música do menu assim que o app abre
     AudioManager.instance.playMusica('musica_menu.mp3');
-
   }
 
   void _abrirConfiguracoesAudio() {
@@ -144,7 +143,8 @@ class _TelaInicialState extends State<TelaInicial> {
                             largura: larguraTela * 0.85,
                             aoPressionar: () {
                               AudioManager.instance.playClique();
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const TelaCategorias(modoMultiplayer: true)));
+                              // AQUI ESTÁ A CORREÇÃO (Sem o const)
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => TelaSelecaoMultiplayer()));
                             },
                           ),
                           const SizedBox(height: 16),
