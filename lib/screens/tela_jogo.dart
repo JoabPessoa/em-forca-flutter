@@ -266,10 +266,8 @@ class _TelaJogoState extends State<TelaJogo> {
     _jogadasNaRodada++;
     bool fimDeRodada = _jogadasNaRodada == 2;
 
-    // Descobre quem é o próximo para chamar pelo número
     int proximoJogador = _jogadorAtual == 1 ? 2 : 1;
 
-    // Monta o título dinâmico com quebra de linha
     String tituloDialogo;
     if (fimDeRodada) {
       tituloDialogo = 'Fim da Rodada $_rodadaAtual';
@@ -285,8 +283,20 @@ class _TelaJogoState extends State<TelaJogo> {
         onAcaoBotao: () async {
           Navigator.pop(context);
           if (fimDeRodada) {
-            if (_j1VenceuRodada) { _vitoriasJ1++; await DatabaseHelper.instance.registrarVitoria('Jogador 1'); }
-            if (_j2VenceuRodada) { _vitoriasJ2++; await DatabaseHelper.instance.registrarVitoria('Jogador 2'); }
+            // ATUALIZADO: Agora registra corretamente derrotas na rodada clássica!
+            if (_j1VenceuRodada) {
+              _vitoriasJ1++;
+              await DatabaseHelper.instance.registrarVitoria('Jogador 1');
+            } else {
+              await DatabaseHelper.instance.registrarDerrota('Jogador 1');
+            }
+
+            if (_j2VenceuRodada) {
+              _vitoriasJ2++;
+              await DatabaseHelper.instance.registrarVitoria('Jogador 2');
+            } else {
+              await DatabaseHelper.instance.registrarDerrota('Jogador 2');
+            }
 
             setState(() {
               _rodadaAtual++;
@@ -307,10 +317,20 @@ class _TelaJogoState extends State<TelaJogo> {
   }
 
   void _processarFimCaboDeGuerra(bool vitoria) async {
+    // ATUALIZADO: Computando derrotas do adversário e empates
     if (vitoria) {
+      int perdedor = _jogadorAtual == 1 ? 2 : 1;
+
       if (_jogadorAtual == 1) _vitoriasJ1++; else _vitoriasJ2++;
+
       await DatabaseHelper.instance.registrarVitoria('Jogador $_jogadorAtual');
+      await DatabaseHelper.instance.registrarDerrota('Jogador $perdedor');
+    } else {
+      // Se deu morte súbita e o jogador atual falhou, ninguém pontua! Ambos ganham derrota.
+      await DatabaseHelper.instance.registrarDerrota('Jogador 1');
+      await DatabaseHelper.instance.registrarDerrota('Jogador 2');
     }
+
     _mostrarDialogo(
         vitoria: vitoria,
         tituloCustomizado: vitoria ? 'Jogador $_jogadorAtual Venceu!' : 'Ambos Perderam!',
@@ -323,10 +343,14 @@ class _TelaJogoState extends State<TelaJogo> {
   }
 
   void _processarFimArquiteto(bool vitoria) async {
+    // ATUALIZADO: O arquiteto perde quando o adversário adivinha e ganha se for enforcado
     int vencedor = vitoria ? _jogadorAtual : (_jogadorAtual == 1 ? 2 : 1);
+    int perdedor = vencedor == 1 ? 2 : 1;
+
     if (vencedor == 1) _vitoriasJ1++; else _vitoriasJ2++;
 
     await DatabaseHelper.instance.registrarVitoria('Jogador $vencedor');
+    await DatabaseHelper.instance.registrarDerrota('Jogador $perdedor');
 
     _mostrarDialogo(
         vitoria: vitoria,

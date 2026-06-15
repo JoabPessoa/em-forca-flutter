@@ -29,9 +29,10 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
     final db = DatabaseHelper.instance;
     final p = await db.buscarPontuacao();
 
+    // ATUALIZADO: Adicionada a categoria 'Jogos'
     final categorias = [
       'Animais', 'Comidas e Bebidas', 'Contos de Fada', 'Esportes',
-      'Filmes e Séries', 'Mitologia', 'Música', 'Música - Cantores', 'Paises', 'Tecnologia'
+      'Filmes e Séries', 'Jogos', 'Mitologia', 'Música', 'Música - Cantores', 'Paises', 'Tecnologia'
     ];
 
     Map<String, int> statsTemp = {};
@@ -105,7 +106,6 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
     }
   }
 
-  // --- NOVO DESIGN DO CARD EVOLUTIVO ---
   Widget _buildCardEvolutivo(String tituloCategoria, List<String> titulosNiveis) {
     int progressoAtual = _estatisticas[tituloCategoria] ?? 0;
 
@@ -127,7 +127,7 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
     } else {
       meta = 50;
       progressoAtual = 50;
-      tituloAtual = titulosNiveis[2];
+      tituloAtual = titulosNiveis[2]; // Mantém o nome da última conquista
       concluido = true;
     }
 
@@ -137,34 +137,29 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        // Fundo cinza com transparência alta ou verde se concluído
         color: concluido ? AppTema.verde.withOpacity(0.15) : Colors.grey.withOpacity(0.15),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: concluido ? AppTema.verde : Colors.transparent, width: 2),
       ),
       child: Row(
         children: [
-          // 1. ÍCONE DA CONQUISTA
           Container(
             width: 60,
             height: 60,
             margin: const EdgeInsets.only(right: 16),
             child: Image.asset(
-              // O Flutter vai procurar uma imagem com o nome EXATO do título atual
-              'assets/images/$tituloAtual.png',
+              'assets/images/$tituloAtual.png', // Tenta carregar a imagem com o nome da conquista atual
               fit: BoxFit.contain,
-              // Fallback de Segurança: Se a imagem não for encontrada, mostra o troféu genérico
               errorBuilder: (context, error, stackTrace) {
+                // Placeholder acionado apenas se a imagem não existir na pasta assets
                 return Image.asset(
                   'assets/images/ic_vitoria.png',
                   fit: BoxFit.contain,
-                  color: concluido ? null : Colors.grey.withOpacity(0.5), // Fica cinza se não concluído
+                  color: concluido ? null : Colors.grey.withOpacity(0.5),
                 );
               },
             ),
           ),
-
-          // 2. TEXTOS E BARRA DE PROGRESSO
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -390,6 +385,7 @@ class _TelaPontuacaoState extends State<TelaPontuacao> {
                         _buildCardEvolutivo('Contos de Fada', ['Era uma Vez', 'Nobre Cavaleiro', 'Guardião do Reino']),
                         _buildCardEvolutivo('Esportes', ['Reserva do Time', 'Titular Absoluto', 'Lenda Olímpica']),
                         _buildCardEvolutivo('Filmes e Séries', ['Espectador de Pipoca', 'Crítico de Cinema', 'Cineasta Premiado']),
+                        _buildCardEvolutivo('Jogos', ['Insert Coin', 'Speedrunner', 'Platina Absoluta']), // ATUALIZADO: Nova categoria listada!
                         _buildCardEvolutivo('Mitologia', ['Iniciado do Oráculo', 'Herói Lendário', 'Divindade Suprema']),
                         _buildCardEvolutivo('Música', ['Ouvinte de Rádio', 'Músico de Coreto', 'Virtuoso da Orquestra']),
                         _buildCardEvolutivo('Música - Cantores', ['Fã de Carteirinha', 'Astro do Palco', 'Ícone Global']),

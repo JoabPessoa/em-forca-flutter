@@ -61,6 +61,8 @@ class _TelaCategoriasState extends State<TelaCategorias> {
         return 'assets/images/btn_cat_fadas.png';
       case 'Paises':
         return 'assets/images/btn_cat_paises.png';
+      case 'Jogos':
+        return 'assets/images/btn_cat_jogos.png';
       default:
         return 'assets/images/btn_cat_todas.png';
     }

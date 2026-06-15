@@ -18,7 +18,7 @@ class AchievementsManager {
     int sequenciaVitorias = await db.buscarEstatistica('sequencia_vitorias');
     int palavrasAcertadasCategoria = await db.buscarEstatistica('cat_$categoriaJogada');
 
-    // NOVO: Contador específico para partidas Multiplayer
+    // Contador específico para partidas Multiplayer
     int totalMultiplayer = 0;
     if (modoMultiplayer) {
       totalMultiplayer = await db.incrementarEstatistica('total_multiplayer');
@@ -26,7 +26,7 @@ class AchievementsManager {
 
     _validarVolumeGeral(totalPartidas);
     _validarDesempenho(venceu, errosCometidos, modoJogo, sequenciaVitorias);
-    _validarModosDeJogo(categoriasSelecionadas, modoMultiplayer, totalMultiplayer); // Passando o novo contador
+    _validarModosDeJogo(categoriasSelecionadas, modoMultiplayer, totalMultiplayer);
     _validarEasterEggs(palavraTexto);
 
     // Avalia as conquistas evolutivas e secretas apenas se o jogador acertou a palavra
@@ -50,7 +50,6 @@ class AchievementsManager {
     if (modoJogo == 'dificil') PlayGamesHelper.desbloquearConquista(AchievementIds.mestreDoMarcador);
   }
 
-  // ATUALIZADO: Agora gerencia corretamente as partidas e o novo Modo Arquiteto
   static void _validarModosDeJogo(List<String> categoriasSelecionadas, bool modoMultiplayer, int totalMultiplayer) {
     if (modoMultiplayer) {
       PlayGamesHelper.desbloquearConquista(AchievementIds.divisoriaNoQuadro); // 1ª Partida
@@ -64,7 +63,6 @@ class AchievementsManager {
     if (categoriasSelecionadas.contains('Todas') && categoriasSelecionadas.length == 1) {
       PlayGamesHelper.desbloquearConquista(AchievementIds.conhecimentoGeral);
     } else if ((categoriasSelecionadas.length > 1 && !categoriasSelecionadas.contains('Todas')) || categoriasSelecionadas.contains('Modo Arquiteto')) {
-      // O jogador ganha a conquista se selecionar várias categorias OU se jogar o Modo Arquiteto!
       PlayGamesHelper.desbloquearConquista(AchievementIds.arquitetoDaForca);
     }
   }
@@ -126,6 +124,11 @@ class AchievementsManager {
         if (acertos >= 10) PlayGamesHelper.desbloquearConquista(AchievementIds.helloWorld);
         if (acertos >= 25) PlayGamesHelper.desbloquearConquista(AchievementIds.arquitetoSistemas);
         if (acertos >= 50) PlayGamesHelper.desbloquearConquista(AchievementIds.mestreCodigo);
+        break;
+      case 'Jogos':
+        if (acertos >= 10) PlayGamesHelper.desbloquearConquista(AchievementIds.catJogos10);
+        if (acertos >= 25) PlayGamesHelper.desbloquearConquista(AchievementIds.catJogos25);
+        if (acertos >= 50) PlayGamesHelper.desbloquearConquista(AchievementIds.catJogos50);
         break;
     }
   }

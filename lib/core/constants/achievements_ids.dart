@@ -74,6 +74,11 @@ class AchievementIds {
   static const String arquitetoSistemas = "CgkI4_HrjP8BEAIQJw"; // 50 partidas
   static const String mestreCodigo = "CgkI4_HrjP8BEAIQGQ";      // 100 partidas
 
+  // Categoria: Jogos
+  static const String catJogos10 = "CgkI4_HrjP8BEAIQOg"; // Insert Coin
+  static const String catJogos25 = "CgkI4_HrjP8BEAIQOw"; // Speedrunner
+  static const String catJogos50 = "CgkI4_HrjP8BEAIQPA"; // Platina Absoluta
+
   // ==========================================
   // EASTER EGGS ORIGINAIS
   // ==========================================
