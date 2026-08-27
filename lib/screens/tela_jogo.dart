@@ -669,7 +669,7 @@ class _BotaoLetraState extends State<_BotaoLetra> {
         duration: const Duration(milliseconds: 60), width: widget.largura, height: widget.altura,
         transform: Matrix4.translationValues(0, _pressionado ? 3 : 0, 0),
         decoration: BoxDecoration(image: DecorationImage(image: AssetImage(widget.imagemFundo), fit: BoxFit.fill)),
-        child: Center(child: Text(widget.letra, style: TextStyle(fontSize: widget.largura * 0.55, fontWeight: FontWeight.w600, color: widget.desativado ? Colors.white : AppTema.texto))),
+        child: Center(child: Text(widget.letra, style: TextStyle(fontSize: widget.largura * 0.55, fontWeight: FontWeight.w600, color: widget.desativado ? const Color(0xFFC6C5C0) : AppTema.texto))),
       ),
     );
   }
