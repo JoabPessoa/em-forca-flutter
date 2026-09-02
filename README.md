@@ -3,8 +3,11 @@
 Projeto desenvolvido na faculdade de Ciência da Computação.
 A ideia foi pegar um jogo que já tínhamos feito em Java e transformar em uma versão mobile usando Flutter.
 
-Jogue Em forca adora: https://play.google.com/store/apps/details?id=com.jamlabs.emforca&pcampaignid=web_share
----
+Jogue Em Forca agora: <br>
+<a href="https://play.google.com/store/apps/details?id=com.jamlabs.emforca" target="_blank">
+  <img src="https://img.shields.io/badge/Google_Play-111111?style=flat-square&logo=google-play&logoColor=white" alt="Disponível no Google Play" />
+</a>
+
 
 ## 📱 Sobre o projeto
 
