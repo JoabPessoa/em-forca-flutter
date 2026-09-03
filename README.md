@@ -81,3 +81,36 @@ Na versão atual, as tabelas de `pontuacao` e `estatisticas` utilizam `CREATE TA
 Formato para adicionar:
 ```dart
 {'texto': 'PALAVRA', 'dica': 'Alguma dica', 'categoria': 'Categoria', 'dificuldade': 'medio'},
+
+---
+
+## 🚀 Rodando o projeto
+
+git clone [https://github.com/SEU_USUARIO/jogo-forca-flutter.git](https://github.com/SEU_USUARIO/jogo-forca-flutter.git)
+cd jogo-forca-flutter
+flutter pub get
+flutter run
+
+📸 O que o jogo tem
+Sistema estratégico de vidas e punições.
+
+Dicas com custo de corações.
+
+Três modos de duelo para 2 jogadores com placares armazenados localmente.
+
+Card evolutivo de progresso nas categorias.
+
+Conquistas no Google Play com recompensas e Easter Eggs.
+
+Animações em tela cheia para troca de turnos no multiplayer.
+
+👨‍💻 Autores
+Projeto desenvolvido pela equipe JAM Labs como parte das atividades da faculdade de Ciência da Computação:
+
+- Augusto César
+- Carlos Joab
+- Arthur Vinícius
+- Michael Domingos
+
+📄 Licença
+Uso livre para estudo.
