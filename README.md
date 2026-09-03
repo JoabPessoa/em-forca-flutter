@@ -81,8 +81,7 @@ Na versão atual, as tabelas de `pontuacao` e `estatisticas` utilizam `CREATE TA
 Formato para adicionar:
 ```dart
 {'texto': 'PALAVRA', 'dica': 'Alguma dica', 'categoria': 'Categoria', 'dificuldade': 'medio'},
-
----
+```
 
 ## 🚀 Rodando o projeto
 
