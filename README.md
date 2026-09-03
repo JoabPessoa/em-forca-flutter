@@ -85,10 +85,10 @@ Formato para adicionar:
 
 ## 🚀 Rodando o projeto
 
-git clone [https://github.com/SEU_USUARIO/jogo-forca-flutter.git](https://github.com/SEU_USUARIO/jogo-forca-flutter.git)
-cd jogo-forca-flutter
-flutter pub get
-flutter run
+git clone [https://github.com/AugustoCGM/Em_forca.git]
+<br>cd jogo-forca-flutter
+<br>flutter pub get
+<br>flutter run
 
 📸 O que o jogo tem
 Sistema estratégico de vidas e punições.
