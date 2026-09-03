@@ -1,146 +1,83 @@
+![Banner do Jogo](assets/images/Ban.png)
+
 # 🪢 Em Forca (Mobile - Flutter)
 
-Projeto desenvolvido na faculdade de Ciência da Computação.
-A ideia foi pegar um jogo que já tínhamos feito em Java e transformar em uma versão mobile usando Flutter.
+Projeto desenvolvido na faculdade de Ciência da Computação pela equipe **JAM Labs**. A ideia foi pegar um jogo que já tínhamos feito em Java e transformar em uma versão mobile moderna usando Flutter.
 
 Jogue Em Forca agora: <br>
 <a href="https://play.google.com/store/apps/details?id=com.jamlabs.emforca" target="_blank">
   <img src="https://img.shields.io/badge/Google_Play-111111?style=flat-square&logo=google-play&logoColor=white" alt="Disponível no Google Play" />
 </a>
 
+---
 
 ## 📱 Sobre o projeto
 
-Esse jogo começou como uma aplicação em Java com interface Swing e banco MySQL.
-Depois resolvi refazer tudo em Flutter pra rodar direto no celular e não depender de servidor.
+Esse jogo começou como uma aplicação em Java com interface Swing e banco MySQL. Nesta versão recriada em Flutter, a arquitetura foi modernizada para rodar nativamente no celular e não depender de servidores externos.
 
-Nessa versão:
-
-* O jogo funciona totalmente offline
-* O banco agora é SQLite (local no app)
-* Interface adaptada pra mobile
-* Código mais organizado comparado à versão antiga
+* O jogo funciona totalmente offline.
+* O banco de dados agora utiliza SQLite local otimizado.
+* Interface totalmente adaptada e com suporte a exibições modernas (Edge-to-Edge).
+* Sistema robusto de conquistas evolutivas integrado ao Google Play Games.
 
 ---
 
-## 🎮 Como funciona
+## 🎮 Como funciona e Modos de Jogo
 
-* Dá pra jogar sozinho ou em 2 jogadores
-* Você escolhe uma categoria
-* Vai tentando adivinhar a palavra letra por letra
-* Tem um limite de 7 erros
+O jogo conta com mecânicas aprimoradas para adivinhar a palavra secreta tendo um limite de 7 vidas. Durante a partida, você pode gastar corações para liberar dicas da palavra oculta. 
 
-Também tem duas ajudas:
-
-* Dica da palavra
-* Mostrar a categoria
-
-Mas usar isso custa vida, então tem que pensar bem.
+Oferecemos os seguintes modos:
+* **1 Jogador:** Jogue sozinho escolhendo a dificuldade (Rodinhas, Fácil, Médio, Difícil). Um sistema de memória garante que as palavras não se repitam até que você zere a categoria inteira.
+* **Multiplayer Clássico:** Rodadas fechadas e justas alternando o celular. O placar só computa a vitória e a derrota quando os dois jogadores finalizam seus turnos.
+* **Cabo de Guerra:** Um duelo 1x1 onde o turno passa para o rival a cada letra errada. Ao perderem as vidas normais, ocorre uma "Morte Súbita" com um coração pulsante para definir o vencedor.
+* **Modo Arquiteto:** Um jogador digita a palavra e a dica em segredo, configurando um desafio personalizado para o outro adivinhar.
 
 ---
 
 ## 🗂️ Categorias
 
+O catálogo expandiu e hoje conta com uma vasta diversidade de temas para desafiar os jogadores:
 * Filmes e Séries
 * Esportes
 * Tecnologia
 * Comidas e Bebidas
-* Música
+* Música (e Música - Cantores)
+* Mitologia
+* Contos de Fada
+* Países
+* Jogos
 
 ---
 
 ## 🛠️ Tecnologias
 
-* Flutter
-* Dart
-* SQLite (sqflite)
+* Flutter & Dart
+* SQLite (sqflite) para banco embarcado
+* games_services para o Google Play Games
+* flutter_animate para transições de UI
 * Google Fonts
-* flutter_animate
 
 ---
 
 ## 📁 Organização do projeto
 
-A estrutura ficou mais ou menos assim:
-
-* `main.dart` → inicialização do app
-* `models/` → estrutura das palavras
-* `database/` → controle do banco SQLite
-* `screens/` → telas do app
-* `widgets/` → componentes reutilizáveis (tipo o boneco da forca)
-* `theme/` → cores e estilos
-
----
-
-## 🔄 Comparação com a versão antiga
-
-Na versão antiga (Java):
-
-* Usava MySQL
-* Interface com Swing
-* Código mais acoplado
-
-Agora no Flutter:
-
-* Banco local (SQLite)
-* Interface mais moderna
-* Melhor separação de responsabilidades
+A estrutura foi refatorada para uma melhor separação de responsabilidades:
+* `main.dart` → Inicialização do app e configurações de interface.
+* `models/` → Estrutura de dados das palavras.
+* `database/` → Gerenciamento inteligente e protegido do banco SQLite.
+* `screens/` → Telas de jogo, seleção de modo multiplayer e hub de conquistas.
+* `widgets/` → Componentes reutilizáveis, como o teclado virtual e as animações do boneco da forca.
+* `core/services/` → Regras de negócio, mapeamento de IDs e integração em nuvem.
+* `theme/` → Estilos, identidades visuais de "quadro branco" e paletas pastel.
 
 ---
 
-## ➕ Adicionar palavras
+## 🔄 Adicionando Palavras (Sem perder progresso)
 
-As palavras ficam dentro do arquivo:
+As palavras são inseridas através do método inicial no `lib/database/database_helper.dart`.
 
-`lib/database/database_helper.dart`
+Na versão atual, as tabelas de `pontuacao` e `estatisticas` utilizam `CREATE TABLE IF NOT EXISTS`. Isso significa que, ao adicionar novas palavras e aumentar a versão do banco (`version: x`), o sistema recria **apenas** a tabela de palavras. O seu placar de duelos, total de vitórias e progresso de conquistas estão permanentemente blindados contra atualizações.
 
-No método de inserção inicial.
-
-Formato:
-
+Formato para adicionar:
 ```dart
 {'texto': 'PALAVRA', 'dica': 'Alguma dica', 'categoria': 'Categoria', 'dificuldade': 'medio'},
-```
-
-Depois de adicionar, precisa reinstalar o app pra recriar o banco.
-
----
-
-## 🚀 Rodando o projeto
-
-```bash
-git clone https://github.com/SEU_USUARIO/jogo-forca-flutter.git
-cd jogo-forca-flutter
-flutter pub get
-flutter run
-```
-
----
-
-## 📸 O que o jogo tem
-
-* Sistema de vidas
-* Dicas com custo
-* Categorias
-* Modo 2 jogadores
-* Placar salvo
-* Interface adaptada pra celular
-
----
-
-## 👨‍💻 Autores
-
-Projeto desenvolvido por:
-
-* Carlos Joab
-* Augusto
-* Arthur Vinícius
-* Michael Domingos
-
-Como parte das atividades da faculdade de Ciência da Computação.
-
----
-
-## 📄 Licença
-
-Uso livre para estudo.
