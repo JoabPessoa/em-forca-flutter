@@ -12,9 +12,6 @@ build/
 android/local.properties
 android/.gradle/
 android/captures/
-android/gradlew
-android/gradlew.bat
-android/local.properties
 android/key.properties
 **/*.jks
 **/*.keystore
@@ -24,6 +21,17 @@ ios/Flutter/flutter_export_environment.sh
 ios/Flutter/.last_build_id
 ios/.symlinks/
 ios/Pods/
+
+# Desktop (Linux, macOS, Windows)
+macos/Flutter/ephemeral
+linux/flutter/ephemeral
+windows/flutter/ephemeral
+windows/flutter/ephemeral/flutter_windows.dll
+windows/flutter/ephemeral/flutter_windows.dll.lib
+windows/flutter/ephemeral/flutter_windows.dll.pdb
+windows/flutter/ephemeral/flutter_windows.dll.exp
+windows/flutter/ephemeral/flutter_windows.dll.ilk
+windows/flutter/ephemeral/flutter_export_environment.cpp
 
 # IDEs
 .idea/
@@ -38,5 +46,12 @@ ios/Pods/
 .DS_Store
 Thumbs.db
 
-# Logs
+# Logs, Databases e Env
 *.log
+*.sqlite
+*.db
+.env
+
+# Google Services / Firebase (Segurança para repositório público)
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
